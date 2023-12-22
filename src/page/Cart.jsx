@@ -1,35 +1,37 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { LuTrash2, LuArrowLeft } from "react-icons/lu";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { cart } from "../feature/index";
 import { useNavigate, Link } from "react-router-dom";
+import { addInCart, removeCart } from "../createSlice/Cartslice";
 function Cart() {
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const data = useSelector(state => state.cart.data)
+  console.log("Data : ",data);
+  const dispatch = useDispatch();
+  // const[loading,setLoading]=useState(true)
   const discountPercentage = 10;
-  const [cartItems, setCartItems] = useState('');
+  const [cartItems, setCartItems] = useState();
   const [itemEdit, setitemEdit] = useState({
     id: '',
     status:false
   })
-  const [products, setProducts] = useState({data:null});
+  const [products, setProducts] = useState({ data: null });
   useEffect(() => {
-    cart.getCart().then(response => 
-      setProducts({ ...products, data: response.data })
-    ).catch(error => console.log(error))
-   },[products.data.cartTotal,setProducts]
-  );
-  useEffect(() => {
-    if (itemEdit.status) {
-      cart.addProduct(itemEdit.id,Number(cartItems)).then().catch(error=>console.log(error))
+    if (data) {
+      setProducts({...products,data})
     }
- },[cartItems,itemEdit.status,itemEdit.id]);
+  
+  },[data])
+  
+
+console.log(products.data);
   const handleClick = id => {
     setitemEdit({ id: id, status: true })
   }
-
-  return products.data? (
+  // if (loading) return <p>Loading...</p>;
+  return products.data && products.data.items.length>0? (
       <div className="mx-auto max-w-full px-2 lg:px-0 bg-white shadow-lg ">
         <div className="mx-auto max-w-2xl py-8 lg:max-w-7xl">
           <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -116,9 +118,19 @@ function Cart() {
                         )}
                         <input
                           type="text"
-                          value={itemEdit.status && item.product._id === itemEdit.id ? cartItems : item.quantity}
-                          onChange={e => setCartItems(e.target.value)}
-                          onClick={()=>handleClick(item.product._id)}
+                          value={itemEdit.status&&itemEdit.id===item.product._id?cartItems:item.quantity}
+                          onChange={e => {
+                            setCartItems(e.target.value)
+                            cart.addProduct(item.product._id, e.target.value).then(response => {
+                              dispatch(addInCart(response.data))
+                             setProducts({...products,data:response.data})
+                            }).catch(error => console.log(error))                      
+                          }}
+                          onClick={() => {
+                            handleClick(item.product._id)
+                          }
+                          
+                          }
                           className="mx-1 h-7 w-9 rounded-md border text-center"
                          
                         />
@@ -133,6 +145,14 @@ function Cart() {
                         <button
                           type="button"
                           className="flex items-center space-x-1 px-2 py-1 pl-0"
+                          onClick={() => {
+                            cart.removeProduct(item.product._id).then().catch(error => console.log(error))
+                            dispatch(removeCart(item.product._id))
+                            setProducts(products.data.items.filter(item => item.product._id !== item.product._id))
+                          
+                            
+                   
+                          }}
                         >
                           <LuTrash2 size={12} className="text-red-500" />
                           <span className="text-xs font-medium text-red-500">
