@@ -10,6 +10,7 @@ import Checkout from './page/Checkout.jsx'
 import Cart from './page/Cart.jsx'
 import { store } from './store/store.js'
 import { Provider } from 'react-redux'
+import Payment from './page/Payment.jsx'
 
 const router = createBrowserRouter([
   {
@@ -30,12 +31,16 @@ const router = createBrowserRouter([
         element:<Product />
       },
       {
+        path: 'products/cart',
+        element:<Cart />
+      },
+      {
         path: 'products/checkout',
         element:<Checkout/>
       },
       {
-        path: 'products/cart',
-        element:<Cart />
+        path: 'products/payment',
+        element:<Payment />
       }
 
       
