@@ -10,7 +10,7 @@ export const cartSlice = createSlice({
   reducers: {
     addInCart: (state,action) => {
      if (action.payload.data) {
-         state.data=action.payload.data
+       state.data = action.payload.data
           }
           if (action.payload.itemCount) {
             state.itemCount=action.payload.itemCount

@@ -1,13 +1,6 @@
 export class Address {
   //create address
-  async createAddress({
-    addressLine1,
-    addressLine2,
-    city,
-    state,
-    pincode,
-    country,
-  }) {
+  async createAddress({ addressLine1, addressLine2, city, state, pincode }) {
     try {
       return await (
         await fetch("http://localhost:8080/api/v1/ecommerce/addresses", {
@@ -17,13 +10,14 @@ export class Address {
             accept: "application/json",
             "Content-Type": "application/json",
           },
+          // body: '{\n  "addressLine1": "New lane central, D-203",\n  "addressLine2": "Opposite to central park",\n  "city": "Mumbai",\n  "state": "Maharashtra",\n  "pincode": 409209,\n  "country": "India"\n}',
           body: JSON.stringify({
             addressLine1: addressLine1,
             addressLine2: addressLine2,
             city: city,
             state: state,
             pincode: pincode,
-            country: country,
+            country: "INDIA",
           }),
         })
       ).json();
@@ -32,7 +26,7 @@ export class Address {
     }
   }
   //get addresses
-  async getAddress(page) {
+  async getAddress(page = 1) {
     try {
       return await (
         await fetch(
@@ -52,14 +46,13 @@ export class Address {
   //get addresss by id
   async getAddressById(_id) {
     try {
-      return await fetch(
-        `http://localhost:8080/api/v1/ecommerce/addresses/${_id}`,
-        {
+      return await (
+        await fetch(`http://localhost:8080/api/v1/ecommerce/addresses/${_id}`, {
           credentials: "include",
           headers: {
             accept: "application/json",
           },
-        }
+        })
       ).json();
     } catch (error) {
       console.log(error);
@@ -82,30 +75,30 @@ export class Address {
     }
   }
   //update address
-  async updateAddress(_id, { addressLine1,
-    addressLine2,
-    city,
-    state,
-    pincode,
-    country, }) {
+  async updateAddress(
+    _id,
+    { addressLine1, addressLine2, city, state, pincode }
+  ) {
     try {
-      return await (await fetch(`http://localhost:8080/api/v1/ecommerce/addresses/${_id}`, {
-        method: 'PATCH',
-        credentials: "include",
-        headers: {
-          'accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        // body: '{\n  "addressLine1": "New lane central, D-203",\n  "addressLine2": "Opposite to central park",\n  "city": "Mumbai",\n  "state": "Maharashtra",\n  "pincode": 409209,\n  "country": "India"\n}',
-        body: JSON.stringify({
-          'addressLine1': addressLine1,
-          'addressLine2': addressLine2,
-          'city': city,
-          'state': state,
-          'pincode': pincode,
-          'country': country
+      return await (
+        await fetch(`http://localhost:8080/api/v1/ecommerce/addresses/${_id}`, {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          // body: '{\n  "addressLine1": "New lane central, D-203",\n  "addressLine2": "Opposite to central park",\n  "city": "Mumbai",\n  "state": "Maharashtra",\n  "pincode": 409209,\n  "country": "India"\n}',
+          body: JSON.stringify({
+            addressLine1: addressLine1,
+            addressLine2: addressLine2,
+            city: city,
+            state: state,
+            pincode: pincode,
+            country: "INDIA",
+          }),
         })
-      })).json()
+      ).json();
     } catch (error) {
       console.log(error);
     }

@@ -19,8 +19,10 @@ function Product() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const addCart = () => {
-    dispatch(addInCart(quantity));
-    cart.addProduct(slug,quantity)
+    cart.addProduct(slug, quantity).then(response => response.data).then(data => {
+      const itemCount=data.items.length
+      dispatch(addInCart({ data,itemCount }))
+    }).catch(error => console.log(error))
     toastify.success("Item added in the cart");
   };
   const imageChangeIn = (e) => {

@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { TfiClose } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
-import { cart, toastify } from "../feature/index";
-import { removeCart } from "../createSlice/Cartslice";
+import { cart, coupon, toastify } from "../feature/index";
+import { addInCart, removeCart } from "../createSlice/Cartslice";
 
 export function Checkout() {
   const cartData = useSelector((state) => state.cart.data);
+  const [couponCode, setCouponCode] = useState("");
+  const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // console.log(cartData.discountedTotal);
-  // console.log(cartData.cartTotal);
+  if (cartData) {
+    console.log(cartData.discountedTotal);
+    console.log(cartData.cartTotal);
+  }
   return (
     cartData && (
       <div className="mx-auto my-4 max-w-4xl md:my-6">
@@ -227,7 +231,7 @@ export function Checkout() {
                           <button
                             type="button"
                             className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                            onClick={()=>navigate('/products/payment')}
+                            onClick={() => navigate("/products/payment")}
                           >
                             Make payment
                           </button>
@@ -282,11 +286,19 @@ export function Checkout() {
                             onClick={() => {
                               cart
                                 .removeProduct(item.product._id)
-                                .then()
+                                .then((response) => response.data)
+                                .then((data) => dispatch(addInCart({ data })))
                                 .catch((error) => console.log(error));
                               let id = item.product._id;
                               let price = item.product.price;
                               dispatch(removeCart({ id, price }));
+                              couponCode &&
+                                coupon
+                                  .applyCoupon(couponCode)
+                                  .then((response) =>
+                                    setMessage(response.message)
+                                  )
+                                  .catch((error) => console.log(error));
                               toastify.remove("Item has been removed");
                             }}
                           />
@@ -303,18 +315,35 @@ export function Checkout() {
                     <input
                       className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                       type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
                       placeholder="Enter coupon code"
                     />
                   </div>
                   <div className="mt-4 sm:mt-0 md:mt-4 lg:mt-0">
                     <button
                       type="button"
-                      className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                      disabled={couponCode === ""}
+                      className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:opacity-10"
+                      onClick={() =>
+                        coupon.applyCoupon(couponCode).then((response) => {
+                          if (response.statusCode === 200) {
+                            const data = response.data;
+                            dispatch(addInCart({ data }));
+                            setMessage(response.message);
+                          } else {
+                            setMessage(response.message);
+                          }
+                        })
+                      }
                     >
                       Apply Coupon
                     </button>
                   </div>
                 </div>
+                {message && (
+                  <div className="mt-2 text-green-500">{message}</div>
+                )}
               </form>
               <ul className="mt-6 space-y-3">
                 <li className="flex items-center justify-between text-gray-600">

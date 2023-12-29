@@ -98,6 +98,7 @@ function Flownavbar({ profile }) {
             </Dropdown.Header>
             <Dropdown.Item>dashboard</Dropdown.Item>
             <Dropdown.Item>Settings</Dropdown.Item>
+           <Link to={'/address'}> <Dropdown.Item>Address</Dropdown.Item></Link> 
             <Dropdown.Item>Earnings</Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item>Sign out</Dropdown.Item>
@@ -105,21 +106,7 @@ function Flownavbar({ profile }) {
           <Navbar.Toggle />
         </div>
         <Navbar.Collapse>
-          {/* <Navbar.Link as={Link} to={"/"} className="text-lg">
-            home
-          </Navbar.Link>
-          <Navbar.Link as={Link} to={"/categories/g"} className="text-lg">
-            about
-          </Navbar.Link>
-          <Navbar.Link as={Link} to={"/categories/bc"} className="text-lg">
-            services
-          </Navbar.Link>
-          <Navbar.Link href="#" className="text-lg">
-            pricing
-          </Navbar.Link>
-          <Navbar.Link href="#" className="text-lg">
-            contact
-          </Navbar.Link> */}
+         
           {navItem.map((item) => (
             <Navbar.Link
               as={Link}

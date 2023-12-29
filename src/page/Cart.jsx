@@ -4,14 +4,13 @@ import { LuTrash2, LuArrowLeft } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { cart, toastify } from "../feature/index";
 import { useNavigate, Link } from "react-router-dom";
-import { addInCart, clearCart, removeCart } from "../createSlice/Cartslice";
+import { addInCart, clearCart,removeCart} from "../createSlice/Cartslice";
 function Cart() {
   const navigate = useNavigate();
   const data = useSelector((state) => state.cart.data);
   const dispatch = useDispatch();
   const discountPercentage = .1;
   const [cartItems, setCartItems] = useState('');
-
   const [itemEdit, setitemEdit] = useState({
     id: "",
     status: false,
@@ -154,11 +153,11 @@ function Cart() {
                         onClick={() => {
                           cart
                             .removeProduct(item.product._id)
-                            .then()
+                            .then(response=>response.data).then(data=>dispatch(addInCart({data})))
                             .catch((error) => console.log(error));
                           let id = item.product._id;
-                          let price = item.product.price;
-                          dispatch(removeCart({ id, price }));
+                              let price = item.product.price;
+                              dispatch(removeCart({ id, price }));
                           toastify.remove("Item has been removed")
                         }}
                       >
@@ -245,10 +244,11 @@ function Cart() {
               <button
             type="button"
                   className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                  onClick={() => navigate("/products/checkout")}   
+                  onClick={() => navigate("/address/edit/658c5e9a651975594cc128b1")}   
           >
            Checkout
-          </button>
+                </button>
+                {/* /products/checkout */}
               </div>
             </div>
           </section>

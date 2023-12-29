@@ -3,8 +3,8 @@ import { Footer } from 'flowbite-react';
 import { BsDribbble, BsFacebook, BsGithub, BsInstagram, BsTwitter } from 'react-icons/bs';
 function Flowfooter() {
   return (
-    <Footer container className='rounded-none mt-3'>
-    <div className="w-full">
+    <Footer container className='rounded-none sticky top-[100vh] mt-3'>
+    <div className="w-full ">
       <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1 ">
         <div>
           <Footer.Brand

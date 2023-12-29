@@ -6,4 +6,5 @@ import order from "./order";
 import product from "./product";
 import profile from "./profile";
 import toastify from "./notification";
-export { address, authService, cart, category, order, product, profile,toastify};
+import coupon from "./coupon";
+export { address, authService, cart, category, order, product, profile,toastify,coupon};
