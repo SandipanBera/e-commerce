@@ -1,5 +1,8 @@
 export class AuthService{
   // constructor use for refresh access token
+  constructor() {
+    this.refreshToken()
+  }
     async userReg({email, password, role = 'USER', username}) {
         // code to register a new user
        try {
@@ -19,7 +22,7 @@ export class AuthService{
              })
          });
            if (register) {
-               return this.loginUser()
+               return this.loginUser({password,username})
            } else {
                throw Error("Failed to Register\n",register);
             }

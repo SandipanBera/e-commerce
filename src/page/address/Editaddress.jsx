@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Container from "../../container/container";
 import { IoWarningOutline } from "react-icons/io5";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { address, toastify } from "../../feature";
 import Input from "../../components/Input";
 import { useParams } from "react-router-dom";

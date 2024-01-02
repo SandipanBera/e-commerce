@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button } from "flowbite-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addInCart } from "../createSlice/Cartslice";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { product } from "../feature/index";
 import { Button } from "flowbite-react";
 import ProductCard from "../components/ProductCard";

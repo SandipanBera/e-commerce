@@ -2,19 +2,62 @@ import React, { useState } from "react";
 import { TfiClose } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { cart, coupon, toastify } from "../feature/index";
 import { addInCart, removeCart } from "../createSlice/Cartslice";
 
 export function Checkout() {
   const cartData = useSelector((state) => state.cart.data);
+  const address = useSelector((state) => state.address.addressData);
+console.log(address);
   const [couponCode, setCouponCode] = useState("");
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  if (cartData) {
-    console.log(cartData.discountedTotal);
-    console.log(cartData.cartTotal);
-  }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      addressLine1: address?.addresses[0]?.addressLine1,
+      city:address?.addresses[0]?.city,
+      state: address?.addresses[0]?.state,
+      pincode:address?.addresses[0]?.pincode,
+    },
+  });
+  const options = [
+    "Select state",
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    " Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    " Madhya Pradesh",
+    " Maharashtra",
+    "Manipur",
+    " Meghalaya",
+    " Mizoram",
+    " Nagaland",
+    " Odisha",
+    " Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    " Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+  ];
+const onSubmit=data=>console.log(data);
   return (
     cartData && (
       <div className="mx-auto my-4 max-w-4xl md:my-6">
@@ -25,7 +68,7 @@ export function Checkout() {
               <div className="flow-root">
                 <div className="-my-6 divide-y divide-gray-200">
                   <div className="py-6">
-                    <form>
+                    <form  onSubmit={handleSubmit(onSubmit)}>
                       <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                         <div>
                           <h3
@@ -47,6 +90,7 @@ export function Checkout() {
                               type="text"
                               placeholder="Enter your name"
                               id="name"
+                              {...register("name", { required: true })}
                             ></input>
                             <label
                               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -59,6 +103,7 @@ export function Checkout() {
                               type="text"
                               placeholder="91XXXXXX45"
                               id="mobile"
+                              {...register("mobile", { required: true })}
                             ></input>
                           </div>
                         </div>
@@ -82,6 +127,7 @@ export function Checkout() {
                                   type="text"
                                   placeholder="4242 4242 4242 4242"
                                   id="cardNum"
+                                  {...register("cardNum", { required: true })}
                                 ></input>
                               </div>
                             </div>
@@ -99,6 +145,7 @@ export function Checkout() {
                                   id="expiration-date"
                                   autoComplete="cc-exp"
                                   className="block h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                  {...register("expiration-date", { required: true })}
                                 />
                               </div>
                             </div>
@@ -117,6 +164,7 @@ export function Checkout() {
                                   id="cvc"
                                   autoComplete="csc"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                  {...register("cvc", { required: true })}
                                 />
                               </div>
                             </div>
@@ -143,6 +191,7 @@ export function Checkout() {
                                   name="address"
                                   autoComplete="street-address"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                  {...register("addressLine1", { required: true })}
                                 />
                               </div>
                             </div>
@@ -161,6 +210,7 @@ export function Checkout() {
                                   name="city"
                                   autoComplete="address-level2"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                  {...register("city", { required: true })}
                                 />
                               </div>
                             </div>
@@ -173,13 +223,21 @@ export function Checkout() {
                                 State / Province
                               </label>
                               <div className="mt-1">
-                                <input
-                                  type="text"
+                                <select
                                   id="region"
-                                  name="region"
-                                  autoComplete="address-level1"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                />
+                                  {...register("state", { required: true })}
+                                >
+                                  {options?.map((option) => (
+                                    <option
+                                      className="w-full"
+                                      key={option}
+                                      value={option}
+                                    >
+                                      {option}
+                                    </option>
+                                  ))}
+                                </select>
                               </div>
                             </div>
 
@@ -197,6 +255,7 @@ export function Checkout() {
                                   name="postal-code"
                                   autoComplete="postal-code"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                  {...register("pincode", { required: true })}
                                 />
                               </div>
                             </div>
@@ -229,7 +288,7 @@ export function Checkout() {
 
                         <div className="mt-10 flex justify-end border-t border-gray-200 pt-6">
                           <button
-                            type="button"
+                            type="submit"
                             className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
                             onClick={() => navigate("/products/payment")}
                           >

@@ -9,7 +9,7 @@ function Cart() {
   const navigate = useNavigate();
   const data = useSelector((state) => state.cart.data);
   const dispatch = useDispatch();
-  const discountPercentage = .1;
+  const discountPercentage =.1
   const [cartItems, setCartItems] = useState('');
   const [itemEdit, setitemEdit] = useState({
     id: "",
@@ -62,8 +62,8 @@ function Cart() {
                             <p className="text-xs font-medium text-gray-500 line-through">
                               &#8377;
                               {(
-                                item.product.price /
-                                (1 - discountPercentage / 100)
+                                item.product.price / (1 - discountPercentage)
+                                
                               ).toFixed(0)}
                             </p>
                             <p className="text-sm font-medium text-gray-900">
@@ -230,7 +230,7 @@ function Cart() {
               </dl>
               <div className="px-2 pb-4 font-medium text-green-700">
                 {`You will save ₹ ${Math.floor(
-                  data.cartTotal * discountPercentage 
+                  data.cartTotal *  discountPercentage 
                 )} on this order`}
               </div>
               <div className="flex justify-between mt-7">  <button
@@ -244,7 +244,7 @@ function Cart() {
               <button
             type="button"
                   className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                  onClick={() => navigate("/address/edit/658c5e9a651975594cc128b1")}   
+                  onClick={() => navigate("/products/checkout")}   
           >
            Checkout
                 </button>

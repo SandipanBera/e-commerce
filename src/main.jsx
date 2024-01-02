@@ -14,6 +14,9 @@ import Payment from "./page/Payment.jsx";
 import Editaddress from "./page/address/Editaddress.jsx";
 import Createaddress from "./page/address/Createaddress.jsx";
 import Address from "./page/address/Address.jsx";
+import OrderSummary from "./page/OrderSummary.jsx";
+import SignUp from "./page/SignUp.jsx";
+import SignIn from "./page/SignIn.jsx";
 
 const router = createBrowserRouter([
   {
@@ -25,16 +28,25 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
+        path: "/signup",
+        element:<SignUp />
+      },
+      {
+        path: "/signin",
+        element:<SignIn />
+
+      },
+      {
         path: "/address",
         element:<Address />
 
       },
       {
-        path: "/address/create",
+        path: "address/create",
         element: <Createaddress />,
       },
       {
-        path: "/address/edit/:slug",
+        path: "address/edit/:slug",
         element: <Editaddress />,
       },
       {
@@ -57,6 +69,10 @@ const router = createBrowserRouter([
         path: "products/payment",
         element: <Payment />,
       },
+      {
+        path: "products/payment/order_summary",
+        element:<OrderSummary />
+      }
     ],
   },
 ]);

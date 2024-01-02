@@ -130,8 +130,8 @@ function Createaddress() {
                       id="state"
                       {...register("state", { required: true })}
                     >
-                      {options &&
-                        options.map((option) => (
+                      {
+                        options?.map((option) => (
                           <option
                             className="w-full"
                             key={option}

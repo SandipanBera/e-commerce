@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef,useMemo } from "react";
 import { Button } from "flowbite-react";
 import { useDispatch } from "react-redux";
 import {cart} from "../feature/index";
@@ -37,7 +37,7 @@ function Product() {
   const discountedPrice = products.price;
   const discountPercentage = 10;
   // Calculate the actual price
-  const actualPrice = discountedPrice / (1 - discountPercentage / 100);
+  const actualPrice = useMemo(() => discountedPrice / (1 - discountPercentage / 100), [discountedPrice]);
   const quantityUp = () => {
     setQuantity((prev) => {
     return prev<products.stock?prev+1:prev

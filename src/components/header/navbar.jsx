@@ -30,27 +30,27 @@ function Flownavbar({ profile }) {
       // active: authStatus,
     },
     {
-      name: "SignUp",
+      name: "Sign Up",
       slug: "/signup",
       // active: !authStatus,
     },
     {
-      name: "Login",
-      slug: "/login",
+      name: "Sign In",
+      slug: "/signin",
       // active: !authStatus,
     },
   ];
   return (
     <>
       <Navbar fluid>
-        <Navbar.Brand href="https://flowbite-react.com">
+        <Navbar.Brand >
           <img
             src="https://flowbite.com/docs/images/logo.svg"
             className="mr-3 h-6 sm:h-9"
             alt="Flowbite React Logo"
           />
-          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-            Flowbite React
+          <span className="self-center text-blue-900 whitespace-nowrap text-xl font-semibold dark:text-white">
+          E-Bazzar
           </span>
         </Navbar.Brand>
         <div className="flex md:order-2 gap-3">
