@@ -4,19 +4,26 @@ import { IoWarningOutline } from "react-icons/io5";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Input from "../components/Input";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
+import { authService } from "../feature";
 function SignIn() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const[error,setError]=useState('')
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
+const navigate=useNavigate()
   const {
     handleSubmit,
     register,
-
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
+    setError('')
+    authService.loginUser(data).then(response => {response.success && navigate('/')}).catch(error => {
+      console.log(error)
+      setError(error)
+    })
     console.log(data);
   };
   return (
@@ -41,7 +48,7 @@ function SignIn() {
             <h2 className="text-2xl font-bold leading-tight text-black">
               Sign in to your account
             </h2>
-            <p className="mt-2text-sm text-gray-600 ">
+            <p className="mt-2 text-sm text-gray-600 ">
               Don&#x27;t have an account?{" "}
               <Link
                 className="font-semibold text-black transition-all duration-200 hover:underline"
@@ -50,18 +57,14 @@ function SignIn() {
                 {" "}
                 Create a free account
               </Link>
+              {error&&<span className="text-sm text-red-600 text-center block">Invalid Credentials</span>}
             </p>
                       <form  className="mt-8" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-5">
                 <div>
-                  <Input label="Email address"  {...register("email", {
+                  <Input label="Username"  {...register("username", {
                       required: "  This field is required",
-                      pattern: {
-                        // Regex to validate email
-                        value:
-                          /^[\w-]+(\.[\w-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/i,
-                        message: "Invalid email address",
-                      },
+                     
                     })}/>
                 </div>
                 <div>
@@ -85,7 +88,7 @@ function SignIn() {
 
                 <div>
                   <button
-                    type="button"
+                    type="submit"
                     className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
                   >
                     Sign In{" "}

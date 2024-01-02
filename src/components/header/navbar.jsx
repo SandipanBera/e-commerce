@@ -1,13 +1,15 @@
 import React from "react";
 import { Avatar, Dropdown, Navbar} from "flowbite-react";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { cart } from "../../feature";
+import { authService, cart } from "../../feature";
+import { clearCart } from "../../createSlice/Cartslice";
 
 function Flownavbar({ profile }) {
   // const authStatus = useSelector(state => state.auth.status);
   const navigate = useNavigate();
+  const dispatch=useDispatch()
  const cartItem=useSelector(state=>state.cart.itemCount)
   const [userData, setUserdata] = useState({
     username: "User",
@@ -101,7 +103,12 @@ function Flownavbar({ profile }) {
            <Link to={'/address'}> <Dropdown.Item>Address</Dropdown.Item></Link> 
             <Dropdown.Item>Earnings</Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item>Sign out</Dropdown.Item>
+            <Dropdown.Item onClick={() => {
+              authService.logoutUser().then(response => {
+                response.success && navigate('/')
+                dispatch(clearCart())
+              }).catch(error => console.log(error))
+            }}>Sign out</Dropdown.Item>
           </Dropdown>
           <Navbar.Toggle />
         </div>
