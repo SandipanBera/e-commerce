@@ -1,6 +1,7 @@
 import React from "react";
-import { Avatar, Dropdown, Navbar} from "flowbite-react";
-import { useSelector,useDispatch } from "react-redux";
+import { Avatar, Dropdown, Navbar } from "flowbite-react";
+import { useSelector, useDispatch } from "react-redux";
+import { category } from "../../feature/index";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService, cart } from "../../feature";
@@ -9,20 +10,28 @@ import { clearCart } from "../../createSlice/Cartslice";
 function Flownavbar({ profile }) {
   // const authStatus = useSelector(state => state.auth.status);
   const navigate = useNavigate();
-  const dispatch=useDispatch()
- const cartItem=useSelector(state=>state.cart.itemCount)
+  const dispatch = useDispatch();
+  const cartItem = useSelector((state) => state.cart.itemCount);
+  const [categories, setCategories] = useState([]); 
+  useEffect(() => {
+      category.getAllCategories().then((response)=>setCategories(response.data.categories))
+  }, [])
+  
   const [userData, setUserdata] = useState({
     username: "User",
     email: "user@gmail.com",
     avatar: null,
   });
 
-  
   //todo add role
   const navItem = [
     {
       name: "Home",
       slug: "/",
+      active: true,
+    },
+    {
+      name: "Category",
       active: true,
     },
 
@@ -45,20 +54,20 @@ function Flownavbar({ profile }) {
   return (
     <>
       <Navbar fluid>
-        <Navbar.Brand >
+        <Navbar.Brand>
           <img
             src="https://flowbite.com/docs/images/logo.svg"
             className="mr-3 h-6 sm:h-9"
             alt="Flowbite React Logo"
           />
           <span className="self-center text-blue-900 whitespace-nowrap text-xl font-semibold dark:text-white">
-          E-Bazzar
+            E-Bazzar
           </span>
         </Navbar.Brand>
         <div className="flex md:order-2 gap-3">
           <button
             type="button"
-            onClick={()=>navigate('/products/cart')}
+            onClick={() => navigate("/products/cart")}
             className="relative inline-flex items-center p-3 text-sm font-medium text-center dark:text-white  rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:hover:bg-blue-70 text-slate-900 dark:focus:ring-slate-700 dark:hover:bg-slate-700  "
           >
             <svg
@@ -100,30 +109,49 @@ function Flownavbar({ profile }) {
             </Dropdown.Header>
             <Dropdown.Item>dashboard</Dropdown.Item>
             <Dropdown.Item>Settings</Dropdown.Item>
-           <Link to={'/address'}> <Dropdown.Item>Address</Dropdown.Item></Link> 
+            <Link to={"/address"}>
+              {" "}
+              <Dropdown.Item>Address</Dropdown.Item>
+            </Link>
             <Dropdown.Item>Earnings</Dropdown.Item>
             <Dropdown.Divider />
-            <Dropdown.Item onClick={() => {
-              authService.logoutUser().then(response => {
-                response.success && navigate('/')
-                dispatch(clearCart())
-              }).catch(error => console.log(error))
-            }}>Sign out</Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                authService
+                  .logoutUser()
+                  .then((response) => {
+                    response.success && navigate("/");
+                    dispatch(clearCart());
+                  })
+                  .catch((error) => console.log(error));
+              }}
+            >
+              Sign out
+            </Dropdown.Item>
           </Dropdown>
           <Navbar.Toggle />
         </div>
         <Navbar.Collapse>
-         
-          {navItem.map((item) => (
-            <Navbar.Link
-              as={Link}
-              key={item.name}
-              to={item.slug}
-              className="text-lg"
-            >
-              {item.name}
-            </Navbar.Link>
-          ))}
+          {navItem.map((item) =>
+            item.name !== "Category" ? (
+              <Navbar.Link
+                as={Link}
+                key={item.name}
+                to={item.slug}
+                className="text-lg"
+              >
+                {item.name}
+              </Navbar.Link>
+            ) : (
+                <Dropdown key={item.name} label={item.name} className="w-44" content="text-lg" inline>
+                  {categories.map((category) => (<Link key={category._id} to={`/categories/${category._id}`} >
+                    <Dropdown.Item>{category.name}</Dropdown.Item>
+                  </Link>))}
+       
+              
+              </Dropdown>
+            )
+          )}
         </Navbar.Collapse>
       </Navbar>
     </>

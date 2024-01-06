@@ -1,12 +1,15 @@
 import React from "react";
 import FlowCarousel from "../components/FlowCarousel";
 import ProductCard from "../components/ProductCard";
-import { product } from "../feature/index";
+import { product, cart } from "../feature/index";
+import { addInCart } from "../createSlice/Cartslice";
+ import { useDispatch } from 'react-redux'
 import { useState, useEffect } from "react";
 import { Button } from "flowbite-react";
 function Home() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
+const dispatch = useDispatch()
 
   const moreProduct = () => {
     setPage((prev) => prev + 1);
@@ -19,6 +22,16 @@ function Home() {
       )
       .catch((error) => console.log(error));
   }, [page]);
+  useEffect(() => {
+    cart.getCart().then(response => {
+      if (response) {
+        const data = response.data;
+        const itemCount = response.data.items.length
+        dispatch(addInCart({data,itemCount}))
+     }
+   }).catch(error=>console.log(error))
+  }, [dispatch])
+  
 
   return (
     <>
