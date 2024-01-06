@@ -5,11 +5,11 @@ import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { cart, coupon, toastify } from "../feature/index";
 import { addInCart, removeCart } from "../createSlice/Cartslice";
-
+import { IoWarningOutline } from "react-icons/io5";
+import { addShipingAddress } from "../createSlice/Shiping_address_slice";
 export function Checkout() {
   const cartData = useSelector((state) => state.cart.data);
   const address = useSelector((state) => state.address.addressData);
-console.log(address);
   const [couponCode, setCouponCode] = useState("");
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
@@ -20,10 +20,11 @@ console.log(address);
     formState: { errors },
   } = useForm({
     defaultValues: {
-      addressLine1: address?.addresses[0]?.addressLine1,
-      city:address?.addresses[0]?.city,
-      state: address?.addresses[0]?.state,
-      pincode:address?.addresses[0]?.pincode,
+      addressLine1: address?.addresses[0]?.addressLine1||'',
+      addressLine2: address?.addresses[0]?.addressLine2||'',
+      city:address?.addresses[0]?.city||'',
+      state: address?.addresses[0]?.state||'',
+      pincode:address?.addresses[0]?.pincode||'',
     },
   });
   const options = [
@@ -57,7 +58,11 @@ console.log(address);
     "Uttarakhand",
     "West Bengal",
   ];
-const onSubmit=data=>console.log(data);
+  const onSubmit = data => {
+    dispatch(addShipingAddress(data));
+    navigate('/products/checkout/payment')
+    console.log(data)
+  };
   return (
     cartData && (
       <div className="mx-auto my-4 max-w-4xl md:my-6">
@@ -90,8 +95,14 @@ const onSubmit=data=>console.log(data);
                               type="text"
                               placeholder="Enter your name"
                               id="name"
-                              {...register("name", { required: true })}
-                            ></input>
+                              {...register("name", {  required: "  This field is required" })}
+                            />
+                              {errors.name && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                            )}
                             <label
                               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               htmlFor="mobile"
@@ -103,8 +114,14 @@ const onSubmit=data=>console.log(data);
                               type="text"
                               placeholder="91XXXXXX45"
                               id="mobile"
-                              {...register("mobile", { required: true })}
-                            ></input>
+                              {...register("mobile", {  required: "  This field is required" })}
+                            />
+                            {errors.mobile && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
                           </div>
                         </div>
                         <hr className="my-8" />
@@ -127,8 +144,14 @@ const onSubmit=data=>console.log(data);
                                   type="text"
                                   placeholder="4242 4242 4242 4242"
                                   id="cardNum"
-                                  {...register("cardNum", { required: true })}
-                                ></input>
+                                  {...register("cardNum", {  required: "  This field is required" })}
+                               />
+                                {errors.cardNum && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
                               </div>
                             </div>
                             <div className="col-span-2 sm:col-span-3">
@@ -145,8 +168,14 @@ const onSubmit=data=>console.log(data);
                                   id="expiration-date"
                                   autoComplete="cc-exp"
                                   className="block h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("expiration-date", { required: true })}
+                                  {...register("expirationDate", {  required: "  This field is required",})}
                                 />
+                                {errors.expirationDate && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
                               </div>
                             </div>
 
@@ -164,8 +193,14 @@ const onSubmit=data=>console.log(data);
                                   id="cvc"
                                   autoComplete="csc"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("cvc", { required: true })}
+                                  {...register("cvc", {  required: "  This field is required" })}
                                 />
+                                {errors.cvc && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
                               </div>
                             </div>
                           </div>
@@ -191,8 +226,38 @@ const onSubmit=data=>console.log(data);
                                   name="address"
                                   autoComplete="street-address"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("addressLine1", { required: true })}
+                                  {...register("addressLine1", { required: "  This field is required", })}
                                 />
+                                {errors.addressLine1 && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
+                              </div>
+                            </div>
+                            <div className="sm:col-span-3">
+                              <label
+                                htmlFor="landmark"
+                                className="block text-sm font-medium text-gray-700"
+                              >
+                                Landmark
+                              </label>
+                              <div className="mt-1">
+                                <input
+                                  type="text"
+                                  id="landmark"
+                                  name="landmark"
+                                  autoComplete="street-address"
+                                  className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                  {...register("addressLine2", { required: "  This field is required", })}
+                                />
+                                {errors.addressLine2 && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
                               </div>
                             </div>
 
@@ -210,8 +275,14 @@ const onSubmit=data=>console.log(data);
                                   name="city"
                                   autoComplete="address-level2"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("city", { required: true })}
+                                  {...register("city", {  required: "  This field is required"})}
                                 />
+                                {errors.city && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
                               </div>
                             </div>
 
@@ -226,7 +297,7 @@ const onSubmit=data=>console.log(data);
                                 <select
                                   id="region"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("state", { required: true })}
+                                  {...register("state", {  required: "  This field is required"})}
                                 >
                                   {options?.map((option) => (
                                     <option
@@ -238,6 +309,12 @@ const onSubmit=data=>console.log(data);
                                     </option>
                                   ))}
                                 </select>
+                                {errors.state && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
                               </div>
                             </div>
 
@@ -255,8 +332,14 @@ const onSubmit=data=>console.log(data);
                                   name="postal-code"
                                   autoComplete="postal-code"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("pincode", { required: true })}
+                                  {...register("pincode", {  required: "  This field is required" })}
                                 />
+                                {errors.pincode&& (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      This field is required
+                    </p>
+                  )}
                               </div>
                             </div>
                           </div>
@@ -290,7 +373,7 @@ const onSubmit=data=>console.log(data);
                           <button
                             type="submit"
                             className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                            onClick={() => navigate("/products/payment")}
+                          
                           >
                             Make payment
                           </button>

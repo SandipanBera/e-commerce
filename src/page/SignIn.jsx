@@ -20,15 +20,24 @@ const navigate=useNavigate()
   } = useForm();
   const onSubmit = (data) => {
     setError('')
-    authService.loginUser(data).then(response => {response.success && navigate('/')}).catch(error => {
-      console.log(error)
-      setError(error)
-    })
-    console.log(data);
-  };
+    authService.loginUser(data)
+       .then(response => {
+         if (response.statusCode === 200) {
+           navigate('/')
+         } else {
+         throw('Something went wrong. Please try again.')
+         }
+       })
+      .catch(error => {
+         setError(error)
+         console.log(error)
+     
+       });
+
+   };
   return (
     <Container className="flex justify-center">
-      <section className="rounded-md shadow-lg w-1/3 mt-3">
+      <section className="rounded-md shadow-lg w-full mx-3 lg:w-1/3 mt-3">
         <div className="flex items-center justify-center bg-white px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             <div className="mb-2">
@@ -57,7 +66,7 @@ const navigate=useNavigate()
                 {" "}
                 Create a free account
               </Link>
-              {error&&<span className="text-sm text-red-600 text-center block">Invalid Credentials</span>}
+              {error&&<span className="text-lg font-semibold text-red-600 text-center block mt-4">Invalid Credentials</span>}
             </p>
                       <form  className="mt-8" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-5">
@@ -65,7 +74,13 @@ const navigate=useNavigate()
                   <Input label="Username"  {...register("username", {
                       required: "  This field is required",
                      
-                    })}/>
+                  })} />
+                  {errors.username && (
+                    <p className="text-red-600 mt-2 inline-flex items-center">
+                      <IoWarningOutline />
+                      {errors.username?.message}
+                    </p>
+                  )}
                 </div>
                 <div>
                   <Input label="Password" {...register('password', { required: "This field is required" })}      type={isPasswordVisible ? "text" : "password"} />

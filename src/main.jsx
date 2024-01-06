@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         element: <Checkout />,
       },
       {
-        path: "products/payment",
+        path: "products/checkout/payment",
         element: <Payment />,
       },
       {

@@ -23,9 +23,9 @@ export class Product{
       }  
   }
   //get all product
-  async getAllProduct(page=1) {
+  async getAllProduct(page=1,limit=20) {
     try {
-      return await (await fetch(`http://localhost:8080/api/v1/ecommerce/products?page=${page}&limit=10`, {
+      return await (await fetch(`http://localhost:8080/api/v1/ecommerce/products?page=${page}&limit=${limit}`, {
         credentials: 'include',
         headers: {
           'accept': 'application/json'

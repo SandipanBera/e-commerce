@@ -3,7 +3,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 function OrderSummary() {
   const navigate = useNavigate();
-  const address = useSelector((state) => state.address.addressData);
+  const address = useSelector((state) => state.shipping.data);
+
   const cart = useSelector((state) => state.cart.data);
   return (
     cart && (
@@ -187,7 +188,7 @@ function OrderSummary() {
                       Shipping Address
                     </p>
                     <p className="w-48 lg:w-full dark:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
-                    {`${address?.addresses[0]?.addressLine1} ${address?.addresses[0]?.addressLine2} ${address?.addresses[0]?.city} ${address?.addresses[0]?.pincode} ${address?.addresses[0]?.state}`}
+                    {`${address?.addressLine1} ${address?.addressLine2} ${address?.city} ${address?.pincode} ${address?.state}`}
                     </p>
                   </div>
                   <div className="flex justify-center md:justify-start items-center md:items-start flex-col space-y-4">
@@ -195,7 +196,7 @@ function OrderSummary() {
                       Billing Address
                     </p>
                     <p className="w-48 lg:w-full dark:text-gray-300 xl:w-48 text-center md:text-left text-sm leading-5 text-gray-600">
-                    {`${address?.addresses[0]?.addressLine1} ${address?.addresses[0]?.addressLine2} ${address?.addresses[0]?.city} ${address?.addresses[0]?.pincode} ${address?.addresses[0]?.state}`}
+                    {`${address?.addressLine1} ${address?.addressLine2} ${address?.city} ${address?.pincode} ${address?.state}`}
                     </p>
                   </div>
                 </div>
