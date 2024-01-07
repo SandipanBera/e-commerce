@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService, cart } from "../../feature";
 import { clearCart } from "../../createSlice/Cartslice";
+import Search from "../Search";
 
 function Flownavbar({ profile }) {
   // const authStatus = useSelector(state => state.auth.status);
@@ -64,7 +65,8 @@ function Flownavbar({ profile }) {
             E-Bazzar
           </span>
         </Navbar.Brand>
-        <div className="flex md:order-2 gap-3">
+        <div className="flex md:order-2 gap-3 items-center">
+          <Search />
           <button
             type="button"
             onClick={() => navigate("/products/cart")}
@@ -131,7 +133,7 @@ function Flownavbar({ profile }) {
           </Dropdown>
           <Navbar.Toggle />
         </div>
-        <Navbar.Collapse>
+        <Navbar.Collapse >
           {navItem.map((item) =>
             item.name !== "Category" ? (
               <Navbar.Link
@@ -143,7 +145,7 @@ function Flownavbar({ profile }) {
                 {item.name}
               </Navbar.Link>
             ) : (
-                <Dropdown key={item.name} label={item.name} className="w-44" content="text-lg" inline>
+                <Dropdown key={item.name} label={item.name} className="w-44" base='text-lg' inline>
                   {categories.map((category) => (<Link key={category._id} to={`/categories/${category._id}`} >
                     <Dropdown.Item>{category.name}</Dropdown.Item>
                   </Link>))}
@@ -154,7 +156,9 @@ function Flownavbar({ profile }) {
           )}
         </Navbar.Collapse>
       </Navbar>
+ 
     </>
+    
   );
 }
 

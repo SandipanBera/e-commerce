@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { addInCart } from "./createSlice/Cartslice";
 import { setAddresses } from "./createSlice/Addressslice";
+import Search from "./components/Search";
 
 function App() { 
   const dispatch = useDispatch()
@@ -36,7 +37,6 @@ function App() {
         <div className="w-full block min-h-screen ">
           <div className="sticky top-0 z-20">
              <Headers  />
-            <Categorylist />
         </div>
           <main>
             <Outlet />
