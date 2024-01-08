@@ -1,29 +1,34 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
+import { useDebounce } from "../../hooks/debounce";
+import { setSearchQuery } from "../../createSlice/Searchslice";
 import { category } from "../../feature/index";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { authService, cart } from "../../feature";
+import { authService } from "../../feature";
 import { clearCart } from "../../createSlice/Cartslice";
 import Search from "../Search";
 
-function Flownavbar({ profile }) {
-  // const authStatus = useSelector(state => state.auth.status);
+function Flownavbar() {
+  const auth = useSelector(state => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const ref =useRef(null)
   const cartItem = useSelector((state) => state.cart.itemCount);
   const [categories, setCategories] = useState([]); 
+  const [search, setSearch] = useState('') 
+  // Debouncing the search query to avoid unnecessary API calls when user is typing fast
+  const debounce = useDebounce(search);
+  useEffect(() => {
+     dispatch(setSearchQuery(debounce));
+  }, [debounce,dispatch])
+  const handleChange = () => {
+    setSearch(ref.current.value)
+  }
   useEffect(() => {
       category.getAllCategories().then((response)=>setCategories(response.data.categories))
   }, [])
-  
-  const [userData, setUserdata] = useState({
-    username: "User",
-    email: "user@gmail.com",
-    avatar: null,
-  });
-
   //todo add role
   const navItem = [
     {
@@ -39,17 +44,17 @@ function Flownavbar({ profile }) {
     {
       name: "Order",
       slug: "/order",
-      // active: authStatus,
+      active: auth.status,
     },
     {
       name: "Sign Up",
       slug: "/signup",
-      // active: !authStatus,
+      active: !auth.status,
     },
     {
       name: "Sign In",
       slug: "/signin",
-      // active: !authStatus,
+      active: !auth.status,
     },
   ];
   return (
@@ -66,7 +71,7 @@ function Flownavbar({ profile }) {
           </span>
         </Navbar.Brand>
         <div className="flex md:order-2 gap-3 items-center">
-          <Search />
+          <Search ref={ref} handleChange={handleChange}  />
           <button
             type="button"
             onClick={() => navigate("/products/cart")}
@@ -96,17 +101,17 @@ function Flownavbar({ profile }) {
             arrowIcon={false}
             inline
             label={
-              userData.avatar ? (
-                <Avatar alt="User settings" img={userData.avatar} rounded />
+              auth?.userData?.avatar ? (
+                <Avatar alt="User settings" img={null} rounded />
               ) : (
                 <Avatar alt="User settings" rounded />
               )
             }
           >
             <Dropdown.Header>
-              <span className="block text-sm">{userData.username}</span>
+              <span className="block text-sm">{auth?.userData?.username}</span>
               <span className="block truncate text-sm font-medium">
-                {userData.email}
+                {auth?.userData?.email}
               </span>
             </Dropdown.Header>
             <Dropdown.Item>dashboard</Dropdown.Item>
@@ -134,7 +139,7 @@ function Flownavbar({ profile }) {
           <Navbar.Toggle />
         </div>
         <Navbar.Collapse >
-          {navItem.map((item) =>
+          {navItem.filter(item=>item.active&& item).map((item) =>
             item.name !== "Category" ? (
               <Navbar.Link
                 as={Link}

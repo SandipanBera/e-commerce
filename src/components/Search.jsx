@@ -1,17 +1,8 @@
-import React, { useEffect } from "react";
+import React, { forwardRef } from "react";
 import Container from "../container/container";
-import { useState } from "react";
-import { useDebounce } from "../hooks/debounce";
-import { useDispatch } from "react-redux";
-import { setSearchQuery } from "../createSlice/Searchslice";
-function Search() {
-  const [search, setSearch] = useState("");
-  const dispatch = useDispatch();
-  // Debouncing the search query to avoid unnecessary API calls when user is typing fast
-  const debounce = useDebounce(search);
-  useEffect(() => {
-     dispatch(setSearchQuery(debounce));
-  }, [debounce,dispatch])
+
+ const Search=forwardRef(function Search({handleChange},ref) {
+
   return (
     <Container>
       <button
@@ -62,12 +53,12 @@ function Search() {
           id="search-navbar"
           className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Search..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          ref={ref}
+          onChange={handleChange}
         />
       </div>
     </Container>
   );
-}
+})
 
 export default Search;

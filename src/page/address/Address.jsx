@@ -65,8 +65,8 @@ function Address() {
                         </th>
                       </tr>
                     </thead>
-                    {data.addresses.length > 0 ? (
-                      data.addresses.map((address, index) => (
+                    {data?.addresses.length > 0 ? (
+                      data?.addresses.map((address, index) => (
                         <tbody
                           key={address._id}
                           className="divide-y divide-gray-200 bg-white"

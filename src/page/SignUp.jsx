@@ -5,10 +5,13 @@ import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Input from "../components/Input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../feature";
+import { login } from "../createSlice/Authslice";
 function SignUp() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -20,8 +23,18 @@ function SignUp() {
     formState: { errors },
   } = useForm();
   const currPassword = watch("password", "");
- const onSubmit = (data) => {
-   authService.userReg(data).then().catch(error=>console.log(error))
+  const onSubmit = (data) => {
+    authService
+      .userReg(data)
+      .then((response) => {
+        if (response.statusCode === 200) {
+          dispatch(login(response.data))
+          navigate('/')
+        } else {
+        throw('Something went wrong. Please try again.')
+        }
+      })
+      .catch((error) => console.log(error));
   };
   return (
     <Container className="flex justify-center">
@@ -78,8 +91,9 @@ function SignUp() {
                       pattern: {
                         // Regex to validate email
                         matchPattern: (value) =>
-                    /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)||"Invalid email address",
-                       
+                          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
+                            value
+                          ) || "Invalid email address",
                       },
                     })}
                   />
@@ -90,7 +104,7 @@ function SignUp() {
                     </p>
                   )}
                 </div>
-                <div >
+                <div>
                   <Input
                     label="Password"
                     type={isPasswordVisible ? "text" : "password"}
@@ -103,8 +117,10 @@ function SignUp() {
                       pattern: {
                         // Regex to validate password
                         matchPattern: (value) =>
-                        /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"/.test(value)||"The password must be at least 8 characters long, contain at least one digit or special character, and contain at least one uppercase and lowercase letter."
-                       
+                          /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"/.test(
+                            value
+                          ) ||
+                          "The password must be at least 8 characters long, contain at least one digit or special character, and contain at least one uppercase and lowercase letter.",
                       },
                     })}
                   />
@@ -127,7 +143,7 @@ function SignUp() {
                 <div>
                   <Input
                     label="Confirm password"
-                  type="password"
+                    type="password"
                     {...register("confpassword", {
                       validate: (value) =>
                         value === currPassword || "The passwords do not match",

@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { address, toastify } from "../../feature";
 import Input from "../../components/Input";
 import {  setNewAddress } from "../../createSlice/Addressslice";
+import { useNavigate } from "react-router-dom";
 function Createaddress() {
   const {
     register,
@@ -13,14 +14,15 @@ function Createaddress() {
     formState: { errors },
   } = useForm();
   const dispatch = useDispatch();
+  const navigate=useNavigate()
   const onSubmit = (data) => {
     address
       .createAddress(data)
       .then((response) => response.data)
       .then((data) => dispatch(setNewAddress(data)))
       .catch((error) => console.log(error));
-    console.log(data);
     toastify.success("Address created sucessfully");
+    navigate('/address')
   };
   const options = [
     "Select your state",

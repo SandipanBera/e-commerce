@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { address, toastify } from "../../feature";
 import Input from "../../components/Input";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { updateAddress } from "../../createSlice/Addressslice";
 function Editaddress() {
   const { slug } = useParams();
@@ -23,6 +23,7 @@ function Editaddress() {
       pincode: "",
     },
   });
+  const navigate=useNavigate()
   useEffect(() => {
     if (slug) {
       (async () => {
@@ -46,6 +47,7 @@ function Editaddress() {
       .then((response) => dispatch(updateAddress({data:response.data,id:slug})))
       .catch((error) => console.log(error));
     toastify.success("Address updated successfully")
+    navigate('/address')
 
   };
   const options = [

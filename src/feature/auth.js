@@ -4,7 +4,7 @@ export class AuthService{
     this.refreshToken()
   }
     async userReg({email, password, role = 'USER', username}) {
-        // code to register a new user
+        // code for register a new user
        try {
          const register=await fetch('http://localhost:8080/api/v1/users/register', {
              method: 'POST',
@@ -30,9 +30,22 @@ export class AuthService{
         console.log(error);
         }
         
+  }
+  async currentUser() {
+    // code for current login user
+    try {
+      return await (await fetch('http://localhost:8080/api/v1/users/current-user', {
+        credentials:'include',
+        headers: {
+          'accept': 'application/json'
+        }
+      })).json()
+    } catch (error) {
+      console.log(error);
     }
+  }
     async loginUser({password, username}) {
-         // code to login user
+         // code for login user
         try {
             return await(await fetch('http://localhost:8080/api/v1/users/login', {
               method: 'POST',
@@ -52,7 +65,7 @@ export class AuthService{
         }   
     }
     async logoutUser() {
-        // code to log out the user
+        // code for log out the user
         try {
             return await(await fetch('http://localhost:8080/api/v1/users/logout', {
               method: 'POST',
@@ -68,7 +81,7 @@ export class AuthService{
         }
   }
   async assignAdmin(_id) {
-    // code to assign admin role
+    // code for assign admin role
     try {
       return await( await fetch(`http://localhost:8080/api/v1/users/assign-role/${_id}`, {
         method: 'POST',
@@ -87,7 +100,7 @@ export class AuthService{
     }
   }
   async changePassword({ oldPassword, newPassword }) {
-    // code to reset password
+    // code for reset password
     try {
       return await(await fetch('http://localhost:8080/api/v1/users/change-password', {
         method: 'POST',

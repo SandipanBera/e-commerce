@@ -6,8 +6,11 @@ import { useForm } from "react-hook-form";
 import Input from "../components/Input";
 import { Link,useNavigate } from "react-router-dom";
 import { authService } from "../feature";
+import { useDispatch } from "react-redux";
+import { login } from "../createSlice/Authslice";
 function SignIn() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const dispatch = useDispatch()
   const[error,setError]=useState('')
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
@@ -23,6 +26,7 @@ const navigate=useNavigate()
     authService.loginUser(data)
        .then(response => {
          if (response.statusCode === 200) {
+           dispatch(login(response.data))
            navigate('/')
          } else {
          throw('Something went wrong. Please try again.')

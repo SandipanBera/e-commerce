@@ -23,13 +23,13 @@ function Category() {
 
   const moreProduct = () => {
     setPage((prev) => prev + 1);
-    console.log("hello");
+
   };
   useEffect(() => {
     product
       .getProductByCategoryId(slug, page)
       .then((response) => {
-        setProducts((prev) => [...prev, ...response.data.products]);
+        setProducts( [...products, ...response.data.products]);
         setHasNextPage(response.data.hasNextPage)
         console.log(response.data.hasNextPage);
       })
