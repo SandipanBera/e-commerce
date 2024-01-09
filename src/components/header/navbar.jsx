@@ -11,24 +11,26 @@ import { clearCart } from "../../createSlice/Cartslice";
 import Search from "../Search";
 
 function Flownavbar() {
-  const auth = useSelector(state => state.auth);
+  const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const ref =useRef(null)
+  const ref = useRef(null);
   const cartItem = useSelector((state) => state.cart.itemCount);
-  const [categories, setCategories] = useState([]); 
-  const [search, setSearch] = useState('') 
+  const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState("");
   // Debouncing the search query to avoid unnecessary API calls when user is typing fast
   const debounce = useDebounce(search);
   useEffect(() => {
-     dispatch(setSearchQuery(debounce));
-  }, [debounce,dispatch])
+    dispatch(setSearchQuery(debounce));
+  }, [debounce, dispatch]);
   const handleChange = () => {
-    setSearch(ref.current.value)
-  }
+    setSearch(ref.current.value);
+  };
   useEffect(() => {
-      category.getAllCategories().then((response)=>setCategories(response.data.categories))
-  }, [])
+    category
+      .getAllCategories()
+      .then((response) => setCategories(response.data.categories));
+  }, []);
   //todo add role
   const navItem = [
     {
@@ -71,7 +73,7 @@ function Flownavbar() {
           </span>
         </Navbar.Brand>
         <div className="flex md:order-2 gap-3 items-center">
-          <Search ref={ref} handleChange={handleChange}  />
+          <Search ref={ref} handleChange={handleChange} />
           <button
             type="button"
             onClick={() => navigate("/products/cart")}
@@ -108,12 +110,23 @@ function Flownavbar() {
               )
             }
           >
-            <Dropdown.Header>
-              <span className="block text-sm">{auth?.userData?.username}</span>
-              <span className="block truncate text-sm font-medium">
-                {auth?.userData?.email}
-              </span>
-            </Dropdown.Header>
+            {auth.status ? (
+              <Dropdown.Header>
+                <span className="block text-sm">
+                  {auth?.userData?.username}
+                </span>
+                <span className="block truncate text-sm font-medium">
+                  {auth?.userData?.email}
+                </span>
+              </Dropdown.Header>
+            ) : (
+              <Dropdown.Header>
+                <span className="block text-sm">user</span>
+                <span className="block truncate text-sm font-medium">
+                  user@gmail.com
+                </span>
+              </Dropdown.Header>
+            )}
             <Dropdown.Item>dashboard</Dropdown.Item>
             <Dropdown.Item>Settings</Dropdown.Item>
             <Link to={"/address"}>
@@ -127,8 +140,12 @@ function Flownavbar() {
                 authService
                   .logoutUser()
                   .then((response) => {
-                    response.success && navigate("/");
-                    dispatch(clearCart());
+                    if (response.statusCode === 200) {
+                      dispatch(clearCart());
+                      navigate("/");
+                    } else {
+                      throw "Something went wrong. Please try again.";
+                    }
                   })
                   .catch((error) => console.log(error));
               }}
@@ -138,32 +155,38 @@ function Flownavbar() {
           </Dropdown>
           <Navbar.Toggle />
         </div>
-        <Navbar.Collapse >
-          {navItem.filter(item=>item.active&& item).map((item) =>
-            item.name !== "Category" ? (
-              <Navbar.Link
-                as={Link}
-                key={item.name}
-                to={item.slug}
-                className="text-lg"
-              >
-                {item.name}
-              </Navbar.Link>
-            ) : (
-                <Dropdown key={item.name} label={item.name} className="w-44" base='text-lg' inline>
-                  {categories.map((category) => (<Link key={category._id} to={`/categories/${category._id}`} >
-                    <Dropdown.Item>{category.name}</Dropdown.Item>
-                  </Link>))}
-       
-              
-              </Dropdown>
-            )
-          )}
+        <Navbar.Collapse>
+          {navItem
+            .filter((item) => item.active && item)
+            .map((item) =>
+              item.name !== "Category" ? (
+                <Navbar.Link
+                  as={Link}
+                  key={item.name}
+                  to={item.slug}
+                  className="text-lg"
+                >
+                  {item.name}
+                </Navbar.Link>
+              ) : (
+                <Dropdown
+                  key={item.name}
+                  label={item.name}
+                  className="w-44"
+                  base="text-lg"
+                  inline
+                >
+                  {categories.map((category) => (
+                    <Link key={category._id} to={`/categories/${category._id}`}>
+                      <Dropdown.Item>{category.name}</Dropdown.Item>
+                    </Link>
+                  ))}
+                </Dropdown>
+              )
+            )}
         </Navbar.Collapse>
       </Navbar>
- 
     </>
-    
   );
 }
 

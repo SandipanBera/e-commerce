@@ -8,7 +8,8 @@ import { deleteAddress } from "../../createSlice/Addressslice";
 function Address() {
   const navigate = useNavigate();
   const data = useSelector((state) => state.address.addressData);
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
+  
 
   return (
     data && (
