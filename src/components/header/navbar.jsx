@@ -9,6 +9,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../../feature";
 import { clearCart } from "../../createSlice/Cartslice";
 import Search from "../Search";
+import { logout } from "../../createSlice/Authslice";
 
 function Flownavbar() {
   const auth = useSelector((state) => state.auth);
@@ -110,7 +111,7 @@ function Flownavbar() {
               )
             }
           >
-            {auth.status ? (
+            {auth?.status ? (
               <Dropdown.Header>
                 <span className="block text-sm">
                   {auth?.userData?.username}
@@ -121,12 +122,13 @@ function Flownavbar() {
               </Dropdown.Header>
             ) : (
               <Dropdown.Header>
-                <span className="block text-sm">user</span>
+                <span className="block text-sm">username</span>
                 <span className="block truncate text-sm font-medium">
                   user@gmail.com
                 </span>
               </Dropdown.Header>
             )}
+
             <Dropdown.Item>dashboard</Dropdown.Item>
             <Dropdown.Item>Settings</Dropdown.Item>
             <Link to={"/address"}>
@@ -142,6 +144,7 @@ function Flownavbar() {
                   .then((response) => {
                     if (response.statusCode === 200) {
                       dispatch(clearCart());
+                      dispatch(logout());
                       navigate("/");
                     } else {
                       throw "Something went wrong. Please try again.";
