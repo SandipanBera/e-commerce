@@ -26,8 +26,9 @@ const navigate=useNavigate()
     authService.loginUser(data)
        .then(response => {
          if (response.statusCode === 200) {
-           dispatch(login(response.data))
+           dispatch(login(response.data.user))
            navigate('/')
+   
          } else {
          throw('Something went wrong. Please try again.')
          }

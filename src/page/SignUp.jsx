@@ -12,7 +12,7 @@ function SignUp() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const[error,setError]=useState('')
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
@@ -24,6 +24,7 @@ function SignUp() {
   } = useForm();
   const currPassword = watch("password", "");
   const onSubmit = (data) => {
+    setError('')
     authService
       .userReg(data)
       .then((response) => {
@@ -31,10 +32,13 @@ function SignUp() {
           dispatch(login(response.data))
           navigate('/')
         } else {
-        throw('Something went wrong. Please try again.')
+        throw("User with email or username already exists")
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        setError(error)
+        console.log(error)
+      });
   };
   return (
     <Container className="flex justify-center">
@@ -66,12 +70,13 @@ function SignUp() {
               >
                 Sign In
               </Link>
+              {error && <span className="text-lg font-semibold text-red-600 text-center block mt-4">{error}</span>}
             </p>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
               <div className="space-y-5">
                 <div>
                   <Input
-                    label="Full name"
+                    label="Username"
                     {...register("username", {
                       required: "   This field is required",
                     })}

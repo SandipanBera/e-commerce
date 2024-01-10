@@ -111,13 +111,13 @@ function Flownavbar() {
               )
             }
           >
-            {auth?.status ? (
+            {auth?.status  ? (
               <Dropdown.Header>
                 <span className="block text-sm">
-                  {auth?.userData?.username}
+                  {auth.userData.username}
                 </span>
                 <span className="block truncate text-sm font-medium">
-                  {auth?.userData?.email}
+                  {auth.userData.email}
                 </span>
               </Dropdown.Header>
             ) : (
