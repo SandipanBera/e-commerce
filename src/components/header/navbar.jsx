@@ -111,11 +111,9 @@ function Flownavbar() {
               )
             }
           >
-            {auth?.status  ? (
+            {auth?.status ? (
               <Dropdown.Header>
-                <span className="block text-sm">
-                  {auth.userData.username}
-                </span>
+                <span className="block text-sm">{auth.userData.username}</span>
                 <span className="block truncate text-sm font-medium">
                   {auth.userData.email}
                 </span>
@@ -172,19 +170,27 @@ function Flownavbar() {
                   {item.name}
                 </Navbar.Link>
               ) : (
-                <Dropdown
+                <div
                   key={item.name}
-                  label={item.name}
-                  className="w-44"
-                  base="text-lg"
-                  inline
+                  className="text-lg text-gray-700  md:border-0 md:hover:bg-transparent md:hover:text-cyan-700"
                 >
-                  {categories.map((category) => (
-                    <Link key={category._id} to={`/categories/${category._id}`}>
-                      <Dropdown.Item>{category.name}</Dropdown.Item>
-                    </Link>
-                  ))}
-                </Dropdown>
+                  {" "}
+                  <Dropdown
+                    label={item.name}
+                    content="text-lg"
+                    className="w-44"
+                    inline
+                  >
+                    {categories.map((category) => (
+                      <Link
+                        key={category._id}
+                        to={`/categories/${category._id}`}
+                      >
+                        <Dropdown.Item>{category.name}</Dropdown.Item>
+                      </Link>
+                    ))}
+                  </Dropdown>
+                </div>
               )
             )}
         </Navbar.Collapse>
