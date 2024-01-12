@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button } from "flowbite-react";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { addInCart } from "../createSlice/Cartslice";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,20 +21,23 @@ function ProductCard({
   for (let i = 1; i <= randomNumber; i++) {
     arr.push(i);
   }
+  const auth = useSelector((state) => state.auth);
   const [present, setPresent] = useState(false);
   useEffect(() => {
-    cart
-      .getCart()
-      .then((response) => response.data.items)
-      .then((items) => {
-        items.map((item) => {
-          if (item.product._id === slug) {
-            setPresent(true);
-          }
-        });
-      })
-      .catch((error) => console.log(error));
-  }, [slug]);
+ if (auth.Status) {
+     cart
+       .getCart()
+       .then((response) => response.data.items)
+       .then((items) => {
+         items.map((item) => {
+           if (item.product._id === slug) {
+             setPresent(true);
+           }
+         });
+       })
+       .catch((error) => console.log(error));
+ }
+  }, [slug,auth.Status]);
 
   const discountPercentage = 10;
   // Calculate the actual price
