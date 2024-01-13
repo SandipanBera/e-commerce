@@ -1,45 +1,45 @@
 import React from "react";
-import Container from "../container/container";
+import Container from "../../container/container";
 import { IoWarningOutline } from "react-icons/io5";
-import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import Input from "../components/Input";
-import { Link, useNavigate } from "react-router-dom";
-import { authService } from "../feature";
-import { login } from "../createSlice/Authslice";
-function SignUp() {
+import Input from "../../components/Input";
+import { Link,useNavigate } from "react-router-dom";
+import { authService } from "../../feature";
+import { useDispatch } from "react-redux";
+import { login } from "../../createSlice/Authslice";
+function SignIn() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const dispatch = useDispatch()
   const[error,setError]=useState('')
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
+const navigate=useNavigate()
   const {
     handleSubmit,
     register,
-    watch,
     formState: { errors },
   } = useForm();
-  const currPassword = watch("password", "");
   const onSubmit = (data) => {
     setError('')
-    authService
-      .userReg(data)
-      .then((response) => {
-        if (response.statusCode === 200) {
-          dispatch(login(response.data))
-          navigate('/')
-        } else {
-        throw("User with email or username already exists")
-        }
-      })
-      .catch((error) => {
-        setError(error)
-        console.log(error)
-      });
-  };
+    authService.loginUser(data)
+       .then(response => {
+         if (response.statusCode === 200) {
+           dispatch(login(response.data.user))
+           navigate('/')
+   
+         } else {
+         throw('Something went wrong. Please try again.')
+         }
+       })
+      .catch(error => {
+         setError(error)
+         console.log(error)
+     
+       });
+
+   };
   return (
     <Container className="flex justify-center">
       <section className="rounded-md shadow-lg w-full mx-3 lg:w-1/3 mt-3">
@@ -60,75 +60,35 @@ function SignUp() {
               </svg>
             </div>
             <h2 className="text-2xl font-bold leading-tight text-black">
-              Sign up to create account
+              Sign in to your account
             </h2>
-            <p className="mt-2 text-base text-gray-600">
-              Already have an account?{" "}
+            <p className="mt-2 text-sm text-gray-600 ">
+              Don&#x27;t have an account?{" "}
               <Link
-                className="font-medium text-black transition-all duration-200 hover:underline"
-                to={"/signin"}
+                className="font-semibold text-black transition-all duration-200 hover:underline"
+                to={"/signup"}
               >
-                Sign In
+                {" "}
+                Create a free account
               </Link>
-              {error && <span className="text-lg font-semibold text-red-600 text-center block mt-4">{error}</span>}
+              {error&&<span className="text-lg font-semibold text-red-600 text-center block mt-4">Invalid Credentials</span>}
             </p>
-            <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
+                      <form  className="mt-8" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-5">
                 <div>
-                  <Input
-                    label="Username"
-                    {...register("username", {
-                      required: "   This field is required",
-                    })}
-                  />
+                  <Input label="Username"  {...register("username", {
+                      required: "  This field is required",
+                     
+                  })} />
                   {errors.username && (
                     <p className="text-red-600 mt-2 inline-flex items-center">
                       <IoWarningOutline />
-                      This field is required
+                      {errors.username?.message}
                     </p>
                   )}
                 </div>
                 <div>
-                  <Input
-                    label="Email address"
-                    {...register("email", {
-                      required: "  This field is required",
-                      pattern: {
-                        // Regex to validate email
-                        matchPattern: (value) =>
-                          /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(
-                            value
-                          ) || "Invalid email address",
-                      },
-                    })}
-                  />
-                  {errors.email && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      {errors.email?.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <Input
-                    label="Password"
-                    type={isPasswordVisible ? "text" : "password"}
-                    {...register("password", {
-                      required: "  This field is required",
-                      minLength: {
-                        value: 8,
-                        message: "Password must have at least 8 characters",
-                      },
-                      pattern: {
-                        // Regex to validate password
-                        matchPattern: (value) =>
-                          /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"/.test(
-                            value
-                          ) ||
-                          "The password must be at least 8 characters long, contain at least one digit or special character, and contain at least one uppercase and lowercase letter.",
-                      },
-                    })}
-                  />
+                  <Input label="Password" {...register('password', { required: "This field is required" })}      type={isPasswordVisible ? "text" : "password"} />
                   {errors.password && (
                     <p className="text-red-600 mt-2 inline-flex items-center">
                       <IoWarningOutline />
@@ -145,28 +105,13 @@ function SignUp() {
                     <span className="text-sm text-gray-600">Show password</span>
                   </label>
                 </div>
-                <div>
-                  <Input
-                    label="Confirm password"
-                    type="password"
-                    {...register("confpassword", {
-                      validate: (value) =>
-                        value === currPassword || "The passwords do not match",
-                    })}
-                  />
-                  {errors.confpassword && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      {errors.confpassword?.message}
-                    </p>
-                  )}
-                </div>
+
                 <div>
                   <button
                     type="submit"
                     className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
                   >
-                    Create Account{" "}
+                    Sign In{" "}
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -227,4 +172,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignIn;
