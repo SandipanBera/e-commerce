@@ -19,6 +19,7 @@ function Flownavbar() {
   const cartItem = useSelector((state) => state.cart.itemCount);
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
+  console.log(auth?.userData?.avatar?.url);
   // Debouncing the search query to avoid unnecessary API calls when user is typing fast
   const debounce = useDebounce(search);
   useEffect(() => {
@@ -105,7 +106,7 @@ function Flownavbar() {
             inline
             label={
               auth?.userData?.avatar ? (
-                <Avatar alt="User settings" img={null} rounded />
+                <Avatar alt="User settings" img={ auth?.userData?.avatar?.url } rounded size="md"/>
               ) : (
                 <Avatar alt="User settings" rounded />
               )
@@ -132,6 +133,10 @@ function Flownavbar() {
             <Link to={"/address"}>
               {" "}
               <Dropdown.Item>Address</Dropdown.Item>
+            </Link>
+            <Link to={"/user/profile"}>
+              {" "}
+              <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
             <Dropdown.Item>Earnings</Dropdown.Item>
             <Dropdown.Divider />

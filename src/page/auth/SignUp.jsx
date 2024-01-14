@@ -84,7 +84,7 @@ function SignUp() {
                   {errors.username && (
                     <p className="text-red-600 mt-2 inline-flex items-center">
                       <IoWarningOutline />
-                      This field is required
+                    {errors}
                     </p>
                   )}
                 </div>

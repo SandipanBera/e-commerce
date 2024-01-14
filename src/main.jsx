@@ -15,8 +15,9 @@ import Editaddress from "./page/address/Editaddress.jsx";
 import Createaddress from "./page/address/Createaddress.jsx";
 import Address from "./page/address/Address.jsx";
 import OrderSummary from "./page/OrderSummary.jsx";
-import SignUp from "./page/SignUp.jsx";
-import SignIn from "./page/SignIn.jsx";
+import SignUp from "./page/auth/SignUp.jsx";
+import SignIn from "./page/auth/SignIn.jsx";
+import Profile from "./page/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
         element:<SignIn />
 
       },
+      {
+        path: "/user/profile",
+        element:<Profile />
+  
+},
       {
         path: "/address",
         element:<Address />
