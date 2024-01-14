@@ -49,14 +49,17 @@ function Profile() {
   }, [dispatch, auth.status, reset]);
 
   const onSubmit = (data) => {
-    profile.createProfile(data).then(response => {
-      if (response.statusCode === 200) {
-     dispatch(setUserProfile(response.data))
-    toastify.success(response.message)
-   } else {
-     throw('something went wrong')
-   }
- }).catch(error=>console.log(error))
+    profile
+      .createProfile(data)
+      .then((response) => {
+        if (response.statusCode === 200) {
+          dispatch(setUserProfile(response.data));
+          toastify.success(response.message);
+        } else {
+          throw "something went wrong";
+        }
+      })
+      .catch((error) => console.log(error));
   };
   return (
     <section className="rounded-md">

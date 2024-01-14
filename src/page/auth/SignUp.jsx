@@ -12,7 +12,7 @@ function SignUp() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const[error,setError]=useState('')
+  const [error, setError] = useState("");
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
@@ -24,20 +24,20 @@ function SignUp() {
   } = useForm();
   const currPassword = watch("password", "");
   const onSubmit = (data) => {
-    setError('')
+    setError("");
     authService
       .userReg(data)
       .then((response) => {
         if (response.statusCode === 200) {
-          dispatch(login(response.data))
-          navigate('/')
+          dispatch(login(response.data));
+          navigate("/");
         } else {
-        throw("User with email or username already exists")
+          throw "User with email or username already exists";
         }
       })
       .catch((error) => {
-        setError(error)
-        console.log(error)
+        setError(error);
+        console.log(error);
       });
   };
   return (
@@ -70,7 +70,11 @@ function SignUp() {
               >
                 Sign In
               </Link>
-              {error && <span className="text-lg font-semibold text-red-600 text-center block mt-4">{error}</span>}
+              {error && (
+                <span className="text-lg font-semibold text-red-600 text-center block mt-4">
+                  {error}
+                </span>
+              )}
             </p>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
               <div className="space-y-5">
@@ -84,7 +88,7 @@ function SignUp() {
                   {errors.username && (
                     <p className="text-red-600 mt-2 inline-flex items-center">
                       <IoWarningOutline />
-                    {errors}
+                      {errors}
                     </p>
                   )}
                 </div>

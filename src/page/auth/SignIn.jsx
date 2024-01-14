@@ -4,42 +4,40 @@ import { IoWarningOutline } from "react-icons/io5";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Input from "../../components/Input";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../../feature";
 import { useDispatch } from "react-redux";
 import { login } from "../../createSlice/Authslice";
 function SignIn() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const dispatch = useDispatch()
-  const[error,setError]=useState('')
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
-const navigate=useNavigate()
+  const navigate = useNavigate();
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    setError('')
-    authService.loginUser(data)
-       .then(response => {
-         if (response.statusCode === 200) {
-           dispatch(login(response.data.user))
-           navigate('/')
-   
-         } else {
-         throw('Something went wrong. Please try again.')
-         }
-       })
-      .catch(error => {
-         setError(error)
-         console.log(error)
-     
-       });
-
-   };
+    setError("");
+    authService
+      .loginUser(data)
+      .then((response) => {
+        if (response.statusCode === 200) {
+          dispatch(login(response.data.user));
+          navigate("/");
+        } else {
+          throw "Something went wrong. Please try again.";
+        }
+      })
+      .catch((error) => {
+        setError(error);
+        console.log(error);
+      });
+  };
   return (
     <Container className="flex justify-center">
       <section className="rounded-md shadow-lg w-full mx-3 lg:w-1/3 mt-3">
@@ -71,15 +69,21 @@ const navigate=useNavigate()
                 {" "}
                 Create a free account
               </Link>
-              {error&&<span className="text-lg font-semibold text-red-600 text-center block mt-4">Invalid Credentials</span>}
+              {error && (
+                <span className="text-lg font-semibold text-red-600 text-center block mt-4">
+                  Invalid Credentials
+                </span>
+              )}
             </p>
-                      <form  className="mt-8" onSubmit={handleSubmit(onSubmit)}>
+            <form className="mt-8" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-5">
                 <div>
-                  <Input label="Username"  {...register("username", {
+                  <Input
+                    label="Username"
+                    {...register("username", {
                       required: "  This field is required",
-                     
-                  })} />
+                    })}
+                  />
                   {errors.username && (
                     <p className="text-red-600 mt-2 inline-flex items-center">
                       <IoWarningOutline />
@@ -88,7 +92,13 @@ const navigate=useNavigate()
                   )}
                 </div>
                 <div>
-                  <Input label="Password" {...register('password', { required: "This field is required" })}      type={isPasswordVisible ? "text" : "password"} />
+                  <Input
+                    label="Password"
+                    {...register("password", {
+                      required: "This field is required",
+                    })}
+                    type={isPasswordVisible ? "text" : "password"}
+                  />
                   {errors.password && (
                     <p className="text-red-600 mt-2 inline-flex items-center">
                       <IoWarningOutline />

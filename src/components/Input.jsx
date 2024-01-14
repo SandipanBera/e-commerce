@@ -8,10 +8,7 @@ const Input = forwardRef(function Input(
   return (
     <div className="w-full ">
       {label && (
-        <label
-          className="text-base font-medium text-gray-900"
-          htmlFor={id}
-        >
+        <label className="text-base font-medium text-gray-900" htmlFor={id}>
           {label}
         </label>
       )}

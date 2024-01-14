@@ -38,29 +38,30 @@ export function Checkout() {
         .then((response) => {
           if (response) {
             reset({
-              name:response?.data?.firstName+" " +response?.data?.lastName||"",
-              mobile:response?.data?.phoneNumber ||"",
-            })
+              name:
+                response?.data?.firstName + " " + response?.data?.lastName ||
+                "",
+              mobile: response?.data?.phoneNumber || "",
+            });
           }
         })
         .catch((error) => console.log(error));
     }
   }, [auth.status, reset]);
-  
+
   useEffect(() => {
-   if (auth.status) {
-     address.getAddress().then(response => {
-       reset({
-        addressLine1:response?.data?.addresses[0]?.addressLine1 ||"",
-        addressLine2:response?.data?.addresses[0]?.addressLine2 ||"",
-        city:response?.data?.addresses[0]?.city ||"",
-        state:response?.data?.addresses[0]?.state ||"",
-        pincode:response?.data?.addresses[0]?.pincode|| "",
-      })
-    })
-   }
-  }, [auth.status,reset])
-  
+    if (auth.status) {
+      address.getAddress().then((response) => {
+        reset({
+          addressLine1: response?.data?.addresses[0]?.addressLine1 || "",
+          addressLine2: response?.data?.addresses[0]?.addressLine2 || "",
+          city: response?.data?.addresses[0]?.city || "",
+          state: response?.data?.addresses[0]?.state || "",
+          pincode: response?.data?.addresses[0]?.pincode || "",
+        });
+      });
+    }
+  }, [auth.status, reset]);
 
   const options = [
     "Select state",
@@ -242,7 +243,7 @@ export function Checkout() {
                                 />
                                 {errors.cvc && (
                                   <p className="text-red-600 mt-2 inline-flex items-center">
-                                     *required
+                                    *required
                                   </p>
                                 )}
                               </div>

@@ -23,7 +23,7 @@ function Editaddress() {
       pincode: "",
     },
   });
-  const navigate=useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     if (slug) {
       (async () => {
@@ -44,11 +44,12 @@ function Editaddress() {
   const onSubmit = (data) => {
     address
       .updateAddress(slug, data)
-      .then((response) => dispatch(updateAddress({data:response.data,id:slug})))
+      .then((response) =>
+        dispatch(updateAddress({ data: response.data, id: slug }))
+      )
       .catch((error) => console.log(error));
-    toastify.success("Address updated successfully")
-    navigate('/address')
-
+    toastify.success("Address updated successfully");
+    navigate("/address");
   };
   const options = [
     "Select your state",
