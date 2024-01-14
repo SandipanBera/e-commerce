@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TfiClose } from "react-icons/tfi";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { cart, coupon, toastify } from "../feature/index";
+import { cart, coupon, toastify, profile, address } from "../feature/index";
 import { addInCart, removeCart } from "../createSlice/Cartslice";
 import { IoWarningOutline } from "react-icons/io5";
 import { addShipingAddress } from "../createSlice/Shiping_address_slice";
 export function Checkout() {
   const cartData = useSelector((state) => state.cart.data);
-  const address = useSelector((state) => state.address.addressData);
+  const auth = useSelector((state) => state.auth);
   const [couponCode, setCouponCode] = useState("");
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
@@ -17,16 +17,51 @@ export function Checkout() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      addressLine1: address?.addresses[0]?.addressLine1||'',
-      addressLine2: address?.addresses[0]?.addressLine2||'',
-      city:address?.addresses[0]?.city||'',
-      state: address?.addresses[0]?.state||'',
-      pincode:address?.addresses[0]?.pincode||'',
+      name: "",
+      mobile: "",
+      addressLine1: "",
+      addressLine2: "",
+      city: "",
+      state: "",
+      pincode: "",
     },
   });
+
+  useEffect(() => {
+    if (auth.status) {
+      profile
+        .getProfile()
+        .then((response) => {
+          if (response) {
+            reset({
+              name:response?.data?.firstName+" " +response?.data?.lastName||"",
+              mobile:response?.data?.phoneNumber ||"",
+            })
+          }
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [auth.status, reset]);
+  
+  useEffect(() => {
+   if (auth.status) {
+     address.getAddress().then(response => {
+       reset({
+        addressLine1:response?.data?.addresses[0]?.addressLine1 ||"",
+        addressLine2:response?.data?.addresses[0]?.addressLine2 ||"",
+        city:response?.data?.addresses[0]?.city ||"",
+        state:response?.data?.addresses[0]?.state ||"",
+        pincode:response?.data?.addresses[0]?.pincode|| "",
+      })
+    })
+   }
+  }, [auth.status,reset])
+  
+
   const options = [
     "Select state",
     "Andhra Pradesh",
@@ -58,10 +93,10 @@ export function Checkout() {
     "Uttarakhand",
     "West Bengal",
   ];
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     dispatch(addShipingAddress(data));
-    navigate('/products/checkout/payment')
-    console.log(data)
+    navigate("/products/checkout/payment");
+    console.log(data);
   };
   return (
     cartData && (
@@ -73,7 +108,7 @@ export function Checkout() {
               <div className="flow-root">
                 <div className="-my-6 divide-y divide-gray-200">
                   <div className="py-6">
-                    <form  onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                         <div>
                           <h3
@@ -95,13 +130,15 @@ export function Checkout() {
                               type="text"
                               placeholder="Enter your name"
                               id="name"
-                              {...register("name", {  required: "  This field is required" })}
+                              {...register("name", {
+                                required: "  This field is required",
+                              })}
                             />
-                              {errors.name && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
+                            {errors.name && (
+                              <p className="text-red-600 mt-2 inline-flex items-center">
+                                <IoWarningOutline />
+                                This field is required
+                              </p>
                             )}
                             <label
                               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -114,14 +151,16 @@ export function Checkout() {
                               type="text"
                               placeholder="91XXXXXX45"
                               id="mobile"
-                              {...register("mobile", {  required: "  This field is required" })}
+                              {...register("mobile", {
+                                required: "  This field is required",
+                              })}
                             />
                             {errors.mobile && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                              <p className="text-red-600 mt-2 inline-flex items-center">
+                                <IoWarningOutline />
+                                This field is required
+                              </p>
+                            )}
                           </div>
                         </div>
                         <hr className="my-8" />
@@ -144,14 +183,16 @@ export function Checkout() {
                                   type="text"
                                   placeholder="4242 4242 4242 4242"
                                   id="cardNum"
-                                  {...register("cardNum", {  required: "  This field is required" })}
-                               />
+                                  {...register("cardNum", {
+                                    required: "  This field is required",
+                                  })}
+                                />
                                 {errors.cardNum && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                                  <p className="text-red-600 mt-2 inline-flex items-center">
+                                    <IoWarningOutline />
+                                    This field is required
+                                  </p>
+                                )}
                               </div>
                             </div>
                             <div className="col-span-2 sm:col-span-3">
@@ -168,14 +209,16 @@ export function Checkout() {
                                   id="expiration-date"
                                   autoComplete="cc-exp"
                                   className="block h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("expirationDate", {  required: "  This field is required",})}
+                                  {...register("expirationDate", {
+                                    required: "  This field is required",
+                                  })}
                                 />
                                 {errors.expirationDate && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                                  <p className="text-red-600 mt-2 inline-flex items-center">
+                                    <IoWarningOutline />
+                                    This field is required
+                                  </p>
+                                )}
                               </div>
                             </div>
 
@@ -193,14 +236,15 @@ export function Checkout() {
                                   id="cvc"
                                   autoComplete="csc"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("cvc", {  required: "  This field is required" })}
+                                  {...register("cvc", {
+                                    required: "  This field is required",
+                                  })}
                                 />
                                 {errors.cvc && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                                  <p className="text-red-600 mt-2 inline-flex items-center">
+                                     *required
+                                  </p>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -226,14 +270,16 @@ export function Checkout() {
                                   name="address"
                                   autoComplete="street-address"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("addressLine1", { required: "  This field is required", })}
+                                  {...register("addressLine1", {
+                                    required: "  This field is required",
+                                  })}
                                 />
                                 {errors.addressLine1 && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                                  <p className="text-red-600 mt-2 inline-flex items-center">
+                                    <IoWarningOutline />
+                                    This field is required
+                                  </p>
+                                )}
                               </div>
                             </div>
                             <div className="sm:col-span-3">
@@ -250,14 +296,16 @@ export function Checkout() {
                                   name="landmark"
                                   autoComplete="street-address"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("addressLine2", { required: "  This field is required", })}
+                                  {...register("addressLine2", {
+                                    required: "  This field is required",
+                                  })}
                                 />
                                 {errors.addressLine2 && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                                  <p className="text-red-600 mt-2 inline-flex items-center">
+                                    <IoWarningOutline />
+                                    This field is required
+                                  </p>
+                                )}
                               </div>
                             </div>
 
@@ -275,14 +323,16 @@ export function Checkout() {
                                   name="city"
                                   autoComplete="address-level2"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("city", {  required: "  This field is required"})}
+                                  {...register("city", {
+                                    required: "  This field is required",
+                                  })}
                                 />
                                 {errors.city && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                                  <p className="text-red-600 mt-2 inline-flex items-center">
+                                    <IoWarningOutline />
+                                    This field is required
+                                  </p>
+                                )}
                               </div>
                             </div>
 
@@ -297,7 +347,9 @@ export function Checkout() {
                                 <select
                                   id="region"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("state", {  required: "  This field is required"})}
+                                  {...register("state", {
+                                    required: "  This field is required",
+                                  })}
                                 >
                                   {options?.map((option) => (
                                     <option
@@ -310,11 +362,11 @@ export function Checkout() {
                                   ))}
                                 </select>
                                 {errors.state && (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                                  <p className="text-red-600 mt-2 inline-flex items-center">
+                                    <IoWarningOutline />
+                                    This field is required
+                                  </p>
+                                )}
                               </div>
                             </div>
 
@@ -332,14 +384,16 @@ export function Checkout() {
                                   name="postal-code"
                                   autoComplete="postal-code"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("pincode", {  required: "  This field is required" })}
+                                  {...register("pincode", {
+                                    required: "  This field is required",
+                                  })}
                                 />
-                                {errors.pincode&& (
-                    <p className="text-red-600 mt-2 inline-flex items-center">
-                      <IoWarningOutline />
-                      This field is required
-                    </p>
-                  )}
+                                {errors.pincode && (
+                                  <p className="text-red-600 mt-2 inline-flex items-center">
+                                    <IoWarningOutline />
+                                    This field is required
+                                  </p>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -373,7 +427,6 @@ export function Checkout() {
                           <button
                             type="submit"
                             className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                          
                           >
                             Make payment
                           </button>

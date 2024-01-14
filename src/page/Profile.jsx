@@ -1,28 +1,62 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Input from "../components/Input";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { IoWarningOutline } from "react-icons/io5";
 import { Avatar, FileInput } from "flowbite-react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { profile } from "../feature";
+import { profile, toastify } from "../feature";
+import { login } from "../createSlice/Authslice";
+import { setUserProfile } from "../createSlice/Profileslice";
 function Profile() {
   const navigate = useNavigate();
-  const [file, setFile] = useState('');
+  const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const [file, setFile] = useState(auth?.userData?.avatar?.url);
   const handleChange = (selectedFilies) => {
-    setFile(URL.createObjectURL(selectedFilies.target.files[0]))
-    console.log(selectedFilies.target.files[0]);
-    profile.updateAvatar(selectedFilies.target.files[0]).then().catch(error=>console.log(error))
-
-  }
-
+    setFile(URL.createObjectURL(selectedFilies.target.files[0]));
+    profile
+      .updateAvatar(selectedFilies.target.files[0])
+      .then((response) => dispatch(login(response.data)))
+      .catch((error) => console.log(error));
+  };
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isDirty },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      firstname: "",
+      lastname: "",
+      number: "",
+    },
+  });
+  useEffect(() => {
+    if (auth.status) {
+      profile
+        .getProfile()
+        .then((response) => {
+          reset({
+            firstname: response?.data?.firstName || "",
+            lastname: response?.data?.lastName || "",
+            number: response?.data?.phoneNumber || "",
+          });
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [dispatch, auth.status, reset]);
+
   const onSubmit = (data) => {
-    console.log(data);
+    profile.createProfile(data).then(response => {
+      if (response.statusCode === 200) {
+     dispatch(setUserProfile(response.data))
+    toastify.success(response.message)
+   } else {
+     throw('something went wrong')
+   }
+ }).catch(error=>console.log(error))
   };
   return (
     <section className="rounded-md">
@@ -78,7 +112,7 @@ function Profile() {
                 </label>
                 <div className="bg-slate-100 h-28 shadow-sm flex items-center mt-2 pl-5 border border-gray-700 rounded">
                   <Avatar
-                   img={file?file:null}
+                    img={file ? file : null}
                     className="justify-start px-3  gap-x-3"
                     size="lg"
                     rounded
@@ -119,12 +153,12 @@ function Profile() {
                   label="Mobile number"
                   {...register("number", {
                     required: "   This field is required",
-                    // Regex to validate mobile number 
+                    // Regex to validate mobile number
                     pattern: {
-                      value: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/i,
+                      value:
+                        /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/i,
                       message: "Invalid phone number",
-                    }
-                    
+                    },
                   })}
                 />
                 {errors.number && (
@@ -137,7 +171,8 @@ function Profile() {
               <div>
                 <button
                   type="submit"
-                  className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
+                  className="inline-flex w-full items-center justify-center rounded-md bg-black disabled:bg-slate-400 px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
+                  disabled={!isDirty}
                 >
                   Save changes
                 </button>

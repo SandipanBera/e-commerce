@@ -6,6 +6,7 @@ import Shiping_address_slice from "../createSlice/Shiping_address_slice";
 import Addressslice from "../createSlice/Addressslice";
 import Searchslice from "../createSlice/Searchslice";
 import { api } from "../createSlice/Apislice";
+import Profileslice from "../createSlice/Profileslice";
 export const store = configureStore({
     reducer: {
         auth: Authslice,
@@ -13,6 +14,7 @@ export const store = configureStore({
         address: Addressslice,
         shipping: Shiping_address_slice,
         search: Searchslice,
+        profile:Profileslice,
         [api.reducerPath]: api.reducer
     },
      // Adding the api middleware enables caching, invalidation, polling,

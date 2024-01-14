@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-let initialState = {  
+const initialState = {  
     data: null,
     itemCount:0,
 }

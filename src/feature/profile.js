@@ -1,5 +1,5 @@
 export class Profile {
-  async createProfile({ code, firstname, lastname, number }) {
+  async createProfile({ code ="91", firstname, lastname, number }) {
     try {
       return await (
         await fetch("http://localhost:8080/api/v1/ecommerce/profile", {
@@ -24,15 +24,15 @@ export class Profile {
   }
   async getProfile() {
     try {
-      const response = await fetch(
+      return await(await fetch(
         "http://localhost:8080/api/v1/ecommerce/profile",
         {
+          credentials:"include",
           headers: {
             accept: "application/json",
           },
         }
-      );
-      return response.json();
+      )) .json();
     } catch (error) {
       console.log(error);
     }
@@ -47,10 +47,9 @@ export class Profile {
       return await (
         await fetch("http://localhost:8080/api/v1/users/avatar", {
           method: "PATCH",
-          credentials:"include",
+          credentials:'include',
           headers: {
             accept: "application/json",
-            "Content-Type": "multipart/form-data",
           },
           body: form,
         })
