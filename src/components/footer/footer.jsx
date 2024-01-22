@@ -18,8 +18,8 @@ function Flowfooter() {
           <div>
             <Footer.Title title="about" />
             <Footer.LinkGroup col>
-              <Footer.Link href="#">Flowbite</Footer.Link>
-              <Footer.Link href="#">Tailwind CSS</Footer.Link>
+              <Footer.Link href="#">E-Bazzar</Footer.Link>
+          
             </Footer.LinkGroup>
           </div>
           <div>

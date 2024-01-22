@@ -82,7 +82,7 @@ export class Order {
             },
             // body: '{\n  "status": "DELIVERED"\n}',
             body: JSON.stringify({
-              'status': status
+               status
             })
           })
             ).json()

@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 function OrderSummary() {
   const navigate = useNavigate();
   const address = useSelector((state) => state.shipping.data);
-
+  const profile = useSelector(state =>state.profile)
+  const auth = useSelector((state) => state.auth);
   const cart = useSelector((state) => state.cart.data);
   return (
     cart && (
@@ -143,14 +144,15 @@ function OrderSummary() {
             </h3>
             <div className="flex flex-col md:flex-row xl:flex-col justify-start items-stretch h-full w-full md:space-x-6 lg:space-x-8 xl:space-x-0">
               <div className="flex flex-col justify-start items-start flex-shrink-0">
-                <div className="flex justify-center w-full md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
+                <div className="flex justify-center  md:justify-start items-center space-x-4 py-8 border-b border-gray-200">
                   <img
-                    src="https://i.ibb.co/5TSg7f6/Rectangle-18.png"
+                    src={ auth?.userData?.avatar?.url } 
                     alt="avatar"
+                    className="w-16 h-16 rounded-full"
                   />
                   <div className="flex justify-start items-start flex-col space-y-2">
                     <p className="text-base dark:text-white font-semibold leading-4 text-left text-gray-800">
-                      David Kent
+                      {profile?.data?.firstName+" "+profile?.data?.lastName}
                     </p>
                   </div>
                 </div>
@@ -177,7 +179,7 @@ function OrderSummary() {
                     />
                   </svg>
                   <p className="cursor-pointer text-sm leading-5 ">
-                    david89@gmail.com
+                    {auth?.userData?.email}
                   </p>
                 </div>
               </div>

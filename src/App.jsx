@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { addInCart } from "./createSlice/Cartslice";
 import { setAddresses } from "./createSlice/Addressslice";
 import { login } from "./createSlice/Authslice";
-import { setUserProfile } from "./createSlice/Profileslice";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -43,19 +43,19 @@ function App() {
         .catch((error) => console.log(error));
     }
   }, [dispatch, auth.status]);
-  useEffect(() => {
-    authService
-      .currentUser()
-      .then((response) => {
-        if (response.statusCode === 200) {
-          dispatch(login(response.data));
-          console.log(response.data)
-        } else {
-          throw "Something went wrong. Please try again.";
-        }
-      })
-      .catch((error) => console.log(error));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   authService
+  //     .currentUser()
+  //     .then((response) => {
+  //       if (response.statusCode === 200) {
+  //         dispatch(login(response.data));
+  //         console.log(response.data)
+  //       } else {
+  //         throw "Something went wrong. Please try again.";
+  //       }
+  //     })
+  //     .catch((error) => console.log(error));
+  // }, [dispatch]);
  
 
   return (

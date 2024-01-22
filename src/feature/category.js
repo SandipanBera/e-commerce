@@ -76,7 +76,7 @@ export class Category {
           },
           // body: '{\n  "name": "womens-wear"\n}',
           body: JSON.stringify({
-            name: name,
+             name,
           }),
         }
       )).json();

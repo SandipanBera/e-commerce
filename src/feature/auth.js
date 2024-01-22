@@ -61,8 +61,8 @@ export class AuthService {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            password: password,
-            username: username,
+             password,
+             username,
           }),
         })
       ).json();
@@ -122,8 +122,8 @@ export class AuthService {
           },
           // body: '{\n  "newPassword": "test@123",\n  "oldPassword": "new@123"\n}',
           body: JSON.stringify({
-            newPassword: newPassword,
-            oldPassword: oldPassword,
+             newPassword,
+             oldPassword,
           }),
         })
       ).json();

@@ -26,7 +26,7 @@ export class Cart {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        quantity: quantity,
+                     quantity,
                     }),
                 })
             ).json();

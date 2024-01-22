@@ -12,11 +12,11 @@ export class Address {
           },
           // body: '{\n  "addressLine1": "New lane central, D-203",\n  "addressLine2": "Opposite to central park",\n  "city": "Mumbai",\n  "state": "Maharashtra",\n  "pincode": 409209,\n  "country": "India"\n}',
           body: JSON.stringify({
-            addressLine1: addressLine1,
-            addressLine2: addressLine2,
-            city: city,
-            state: state,
-            pincode: pincode,
+            addressLine1,
+            addressLine2,
+            city,
+            state,
+            pincode,
             country: "INDIA",
           }),
         })
