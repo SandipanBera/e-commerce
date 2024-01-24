@@ -1,7 +1,7 @@
 import React from "react";
 import FlowCarousel from "../components/FlowCarousel";
 import ProductCard from "../components/ProductCard";
-import { cart,authService } from "../feature/index";
+import { cart, authService } from "../feature/index";
 import { addInCart } from "../createSlice/Cartslice";
 import { login } from "../createSlice/Authslice";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,23 +52,9 @@ function Home() {
         .catch((error) => console.log(error));
     }
   }, [dispatch, auth.Status]);
-  useEffect(() => {
-    authService
-      .currentUser()
-      .then((response) => {
-        if (response.statusCode === 200) {
-          dispatch(login(response.data));
-          console.log(response.data)
-        } else {
-          throw "Something went wrong. Please try again.";
-        }
-      })
-      .catch((error) => console.log(error));
-  }, [dispatch]); 
+
   if (isLoading) {
-    return (
-      <LoadingSkeleton />
-    );
+    return <LoadingSkeleton />;
   }
 
   return (
@@ -91,6 +77,7 @@ function Home() {
                   slug={item._id}
                   image={item.mainImage.url}
                   name={item.name}
+                  imageName={item.name}
                   price={item.price}
                 />
               ))}

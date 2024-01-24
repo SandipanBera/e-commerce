@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef,useMemo } from "react";
 import { Button } from "flowbite-react";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import {cart} from "../feature/index";
 import { addInCart } from "../createSlice/Cartslice";
 import { HiShoppingCart } from "react-icons/hi";
@@ -12,6 +12,7 @@ import { toastify } from "../feature/index";
 
 function Product() {
   const { slug } = useParams();
+
   const ref = useRef(null);
   const [products, setProducts] = useState({});
   const [quantity, setQuantity] = useState(1);
@@ -55,15 +56,17 @@ function Product() {
         setProducts((prev) => ({ ...prev, ...response.data }))
       )
       .catch((error) => console.log(error));
+    
   }, [slug]);
-  let id = products.category;
-
-  if (id) {
+ 
+useEffect(() => {
+  if (products.category) {
     category
-      .getCategory(id)
+      .getCategory(products.category)
       .then((response) => setCategories(response.data.name))
       .catch((error) => console.log(error));
   }
+}, [products.category])
 
   return (
     <div className="mx-auto max-w-7xl px-4 md:px-8 2xl:px-16">
@@ -113,7 +116,7 @@ function Product() {
             </div>
           </div>
           <div className="border-b border-gray-300 pb-3  ">
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <h3 className="text-heading mb-2.5 text-base font-semibold capitalize md:text-lg">
                 size
               </h3>
@@ -127,7 +130,7 @@ function Product() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
             <div className="mb-4 ">
               <h3 className="text-heading mb-2.5 text-base font-semibold capitalize md:text-lg">
                 types

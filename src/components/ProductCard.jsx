@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Button } from "flowbite-react";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addInCart } from "../createSlice/Cartslice";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,6 +12,7 @@ function ProductCard({
   image = "https://m.media-amazon.com/images/I/71dKjvLPkAL._AC_UF350,350_QL80_.jpg",
   price,
   slug,
+  imageName,
   className = "",
 }) {
   const min = 2;
@@ -24,20 +25,20 @@ function ProductCard({
   const auth = useSelector((state) => state.auth);
   const [present, setPresent] = useState(false);
   useEffect(() => {
- if (auth.Status) {
-     cart
-       .getCart()
-       .then((response) => response.data.items)
-       .then((items) => {
-         items.map((item) => {
-           if (item.product._id === slug) {
-             setPresent(true);
-           }
-         });
-       })
-       .catch((error) => console.log(error));
- }
-  }, [slug,auth.Status]);
+    if (auth.Status) {
+      cart
+        .getCart()
+        .then((response) => response.data.items)
+        .then((items) => {
+          items.map((item) => {
+            if (item.product._id === slug) {
+              setPresent(true);
+            }
+          });
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [slug, auth.Status]);
 
   const discountPercentage = 10;
   // Calculate the actual price
@@ -54,9 +55,10 @@ function ProductCard({
           const data = response.data;
           const itemCount = response.data.items.length;
           dispatch(addInCart({ data, itemCount }));
-          return data.items
+          return data.items;
         }
-      }).then((items) => {
+      })
+      .then((items) => {
         items.map((item) => {
           if (item.product._id === slug) {
             setPresent(true);
@@ -69,11 +71,7 @@ function ProductCard({
   };
 
   return (
-    <Card
-      className={`  gap-3  ${className}`}
-      imgAlt="Apple Watch Series 7 in colors pink, silver, and black"
-      imgSrc={image}
-    >
+    <Card className={`  gap-3  ${className}`} imgAlt={imageName} imgSrc={image}>
       <Link to={`/products/${slug}`}>
         {" "}
         <h1 className="md:text-base font-semibold tracking-tight text-gray-900 hover:text-blue-600 dark:text-white text-base">
