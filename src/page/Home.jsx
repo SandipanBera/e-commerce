@@ -1,9 +1,8 @@
 import React from "react";
 import FlowCarousel from "../components/FlowCarousel";
 import ProductCard from "../components/ProductCard";
-import { cart, authService } from "../feature/index";
+import { cart } from "../feature/index";
 import { addInCart } from "../createSlice/Cartslice";
-import { login } from "../createSlice/Authslice";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetAllProductsQuery } from "../createSlice/Apislice";
 import { useState, useEffect } from "react";

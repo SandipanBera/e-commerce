@@ -25,7 +25,7 @@ function ProductCard({
   const auth = useSelector((state) => state.auth);
   const [present, setPresent] = useState(false);
   useEffect(() => {
-    if (auth.Status) {
+    if (auth.status) {
       cart
         .getCart()
         .then((response) => response.data.items)
@@ -34,11 +34,13 @@ function ProductCard({
             if (item.product._id === slug) {
               setPresent(true);
             }
+     
           });
         })
         .catch((error) => console.log(error));
     }
-  }, [slug, auth.Status]);
+ 
+  }, [slug, auth.status]);
 
   const discountPercentage = 10;
   // Calculate the actual price

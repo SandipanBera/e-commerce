@@ -49,7 +49,6 @@ function App() {
       .then((response) => {
         if (response.statusCode === 200) {
           dispatch(login(response.data));
-          console.log(response.data)
         } else {
           throw "Something went wrong. Please try again.";
         }
