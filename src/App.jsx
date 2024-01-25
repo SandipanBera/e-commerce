@@ -14,6 +14,12 @@ function App() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
 
+  useEffect(() => {
+   if (auth.status) {
+    authService.refreshToken().then().catch(error=>console.log(error))
+   }
+  }, [auth.status])
+  
   // Fetching the cart data when the app loads for the first time.
   useEffect(() => {
     if (auth.status) {

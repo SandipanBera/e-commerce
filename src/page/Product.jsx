@@ -116,21 +116,6 @@ useEffect(() => {
             </div>
           </div>
           <div className="border-b border-gray-300 pb-3  ">
-            {/* <div className="mb-4">
-              <h3 className="text-heading mb-2.5 text-base font-semibold capitalize md:text-lg">
-                size
-              </h3>
-              <ul className="colors -mr-3 flex flex-wrap">
-                {["S", "M", "L", "XL"].map((size) => (
-                  <li
-                    key={size}
-                    className="text-heading mb-2 mr-2 flex h-9 w-9 cursor-pointer items-center justify-center rounded border border-gray-100 p-1 text-xs font-semibold uppercase transition duration-200 ease-in-out hover:border-black md:mb-3 md:mr-3 md:h-11 md:w-11 md:text-sm "
-                  >
-                    {size}
-                  </li>
-                ))}
-              </ul>
-            </div> */}
             <div className="mb-4 ">
               <h3 className="text-heading mb-2.5 text-base font-semibold capitalize md:text-lg">
                 types

@@ -4,13 +4,15 @@ import { LuTrash2, LuArrowLeft } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { cart, toastify } from "../feature/index";
 import { useNavigate, Link } from "react-router-dom";
-import { addInCart, clearCart,removeCart} from "../createSlice/Cartslice";
+import { addInCart,clearCart,removeCart} from "../createSlice/Cartslice";
+import Modals from "../components/Modals";
 function Cart() {
   const navigate = useNavigate();
   const data = useSelector((state) => state.cart.data);
   const dispatch = useDispatch();
   const discountPercentage =.1
   const [cartItems, setCartItems] = useState('');
+  const [openModal, setOpenModal] = useState(false);
   const [itemEdit, setitemEdit] = useState({
     id: "",
     status: false,
@@ -18,9 +20,24 @@ function Cart() {
   const handleClick = (id) => {
     setitemEdit({ id: id, status: true });
   };
- 
+  const handleClearCart = () => {
+    cart.clearCart().then(response=>{if (response.success) {
+      dispatch(clearCart())
+      setOpenModal(false)
+    }}).catch(error=>console.log(error))
+   
+ }
   return data && data.items.length > 0 ? (
     <div className="mx-auto max-w-full px-2 lg:px-0 bg-white shadow-lg ">
+      <Modals
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        cb={handleClearCart}
+        headerText={`Clear Cart`}
+        bodyText={`Are you sure want to clear your cart?`}
+        btn1={`Yes,I want`}
+        btn2={`No,Go Back`}
+      />
       <div className="mx-auto max-w-2xl py-8 lg:max-w-7xl">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
           Shopping Cart
@@ -79,7 +96,7 @@ function Cart() {
                             <p className="text-sm font-medium text-green-500">
                               10%
                             </p>
-                            {/* //todo discount should be dynamic check later */}
+                             {/* //todo discount should be dynamic check later */}
                           </div>
                         </div>
                       </div>
@@ -175,8 +192,9 @@ function Cart() {
             type="button"
               className="rounded-md  bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
               onClick={() => {
-                cart.clearCart().then().catch(error=>console.log(error))
-                dispatch(clearCart())
+                // cart.clearCart().then().catch(error=>console.log(error))
+                // dispatch(clearCart())
+                setOpenModal(true)
               }}
           >
          Clear cart
@@ -255,6 +273,7 @@ function Cart() {
         </form>
       </div>
     </div>
+
   ) : (
     <div className="py-12 h-96">
       <div className="text-center">
@@ -276,10 +295,11 @@ function Cart() {
           </button>
           <button
             type="button"
-              className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+              className="rounded-md bg-black px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+              onClick={() => navigate("/signin")}
               
           >
-            Contact Us
+           Sign In
           </button>
         </div>
       </div>

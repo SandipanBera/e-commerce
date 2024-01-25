@@ -1,8 +1,5 @@
 export class AuthService {
   // constructor use for refresh access token
-  constructor() {
-    this.refreshToken();
-  }
   async userReg({ email, password, role = "USER", username }) {
     // code for register a new user
     try {

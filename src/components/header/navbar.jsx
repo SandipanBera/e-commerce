@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import shoppingCart from "/shopping_cart_full.png";
 import { Avatar, Dropdown, Navbar } from "flowbite-react";
 import { useSelector, useDispatch } from "react-redux";
 import { useDebounce } from "../../hooks/debounce";
@@ -65,9 +66,9 @@ function Flownavbar() {
       <Navbar fluid>
         <Navbar.Brand>
           <img
-            src="https://flowbite.com/docs/images/logo.svg"
+            src={shoppingCart}
             className="mr-3 h-6 sm:h-9"
-            alt="Flowbite React Logo"
+            alt="E-Bazzar Logo"
           />
           <span className="self-center text-blue-900 whitespace-nowrap text-xl font-semibold dark:text-white">
             E-Bazzar
