@@ -1,5 +1,6 @@
 import React from "react";
 import Container from "../../container/container";
+import options from "../../option/option";
 import { IoWarningOutline } from "react-icons/io5";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -24,37 +25,6 @@ function Createaddress() {
     toastify.success("Address created sucessfully");
     navigate('/address')
   };
-  const options = [
-    "Select your state",
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    " Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    " Madhya Pradesh",
-    " Maharashtra",
-    "Manipur",
-    " Meghalaya",
-    " Mizoram",
-    " Nagaland",
-    " Odisha",
-    " Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    " Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-  ];
 
   return (
     <Container>

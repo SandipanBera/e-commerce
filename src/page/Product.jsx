@@ -38,7 +38,7 @@ function Product() {
   const discountedPrice = products.price;
   const discountPercentage = 10;
   // Calculate the actual price
-  const actualPrice = useMemo(() => discountedPrice / (1 - discountPercentage / 100), [discountedPrice]);
+  const actualPrice = useMemo(() =>Math.trunc (discountedPrice / (1 - discountPercentage / 100)), [discountedPrice]);
   const quantityUp = () => {
     setQuantity((prev) => {
     return prev<products.stock?prev+1:prev
@@ -53,8 +53,9 @@ function Product() {
     product
       .getProductById(slug)
       .then((response) =>
-        setProducts((prev) => ({ ...prev, ...response.data }))
-      )
+        setProducts({...response.data})
+    )
+      // (prev) => ({ ...prev, ...response.data })
       .catch((error) => console.log(error));
     
   }, [slug]);
@@ -111,7 +112,7 @@ useEffect(() => {
                 &#8377;{products.price}
               </div>
               <span className="font-segoe pl-2 text-sm text-gray-400 line-through md:text-base lg:text-lg xl:text-xl">
-                &#8377;{actualPrice.toFixed(2)}
+                &#8377;{actualPrice}
               </span>
             </div>
           </div>
@@ -167,7 +168,7 @@ useEffect(() => {
               </Button>
               <Button
                 className=" h-11 w-full"
-                onClick={() => navigate("/products/checkout")}
+                onClick={() => navigate("/products/cart")}
               >
                 {/* `/categories/${products.category}` */}
                 {/* '/products/checkout' */}

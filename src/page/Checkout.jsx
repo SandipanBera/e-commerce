@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { TfiClose } from "react-icons/tfi";
+import options from "../option/option";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -9,8 +10,11 @@ import { IoWarningOutline } from "react-icons/io5";
 import { addShipingAddress } from "../createSlice/Shiping_address_slice";
 export function Checkout() {
   const cartData = useSelector((state) => state.cart.data);
+  console.log(cartData);
   const auth = useSelector((state) => state.auth);
-  const [couponCode, setCouponCode] = useState("");
+  const [couponCode, setCouponCode] = useState(
+    cartData?.coupon?.couponCode || ""
+  );
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -59,41 +63,11 @@ export function Checkout() {
           state: response?.data?.addresses[0]?.state || "",
           pincode: response?.data?.addresses[0]?.pincode || "",
         });
+        console.log(response?.data?.addresses[0]?.state);
       });
     }
   }, [auth.status, reset]);
 
-  const options = [
-    "Select state",
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    " Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    " Madhya Pradesh",
-    " Maharashtra",
-    "Manipur",
-    " Meghalaya",
-    " Mizoram",
-    " Nagaland",
-    " Odisha",
-    " Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    " Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-  ];
   const onSubmit = (data) => {
     dispatch(addShipingAddress(data));
     navigate("/products/checkout/payment");
@@ -339,14 +313,14 @@ export function Checkout() {
 
                             <div>
                               <label
-                                htmlFor="region"
+                                htmlFor="state"
                                 className="block text-sm font-medium text-gray-700"
                               >
                                 State / Province
                               </label>
                               <div className="mt-1">
                                 <select
-                                  id="region"
+                                  id="state"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                   {...register("state", {
                                     required: "  This field is required",

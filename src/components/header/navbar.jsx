@@ -19,6 +19,7 @@ function Flownavbar() {
   const ref = useRef(null);
   const cartItem = useSelector((state) => state.cart.itemCount);
   const [categories, setCategories] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
   const [search, setSearch] = useState("");
   // Debouncing the search query to avoid unnecessary API calls when user is typing fast
   const debounce = useDebounce(search);
@@ -129,7 +130,6 @@ function Flownavbar() {
             )}
 
             <Dropdown.Item>dashboard</Dropdown.Item>
-            <Dropdown.Item>Settings</Dropdown.Item>
             <Link to={"/address"}>
               {" "}
               <Dropdown.Item>Address</Dropdown.Item>
@@ -138,7 +138,7 @@ function Flownavbar() {
               {" "}
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
-            <Dropdown.Item>Earnings</Dropdown.Item>
+            <Dropdown.Item>Change Password</Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item
               onClick={() => {

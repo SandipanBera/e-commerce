@@ -30,22 +30,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/signup",
-        element:<SignUp />
+        element: <SignUp />,
       },
       {
         path: "/signin",
-        element:<SignIn />
-
+        element: <SignIn />,
       },
       {
         path: "/user/profile",
-        element:<Profile />
-  
-},
+        element: <Profile />,
+      },
       {
         path: "/address",
-        element:<Address />
-
+        element: <Address />,
       },
       {
         path: "address/create",
@@ -77,8 +74,8 @@ const router = createBrowserRouter([
       },
       {
         path: "products/payment/order_summary",
-        element:<OrderSummary />
-      }
+        element: <OrderSummary />,
+      },
     ],
   },
 ]);

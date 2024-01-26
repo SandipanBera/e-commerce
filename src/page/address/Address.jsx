@@ -56,8 +56,9 @@ function Address() {
                           scope="col"
                           className="px-4 py-3.5 text-left text-sm font-normal text-gray-700"
                         >
-                          Created at
+                          Updated at
                         </th>
+                  
                         <th scope="col" className="px-4 py-3.5 text-left ">
                           <span className="sr-only">Delete</span>
                         </th>
@@ -89,7 +90,7 @@ function Address() {
                             </td>
                             <td className="whitespace-nowrap px-4 py-4">
                               <span className="inline-flex rounded-full  text-xs font-semibold leading-5 ">
-                                {address.createdAt.slice(0, 10)}
+                                {address.updatedAt.slice(0, 10)}
                               </span>
                             </td>
                             <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-700">

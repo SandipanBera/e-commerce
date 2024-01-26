@@ -4,14 +4,14 @@ import { LuTrash2, LuArrowLeft } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { cart, toastify } from "../feature/index";
 import { useNavigate, Link } from "react-router-dom";
-import { addInCart,clearCart,removeCart} from "../createSlice/Cartslice";
-import Modals from "../components/Modals";
+import { addInCart, clearCart, removeCart } from "../createSlice/Cartslice";
+import Modals from "../components/modal/Modals";
 function Cart() {
   const navigate = useNavigate();
   const data = useSelector((state) => state.cart.data);
   const dispatch = useDispatch();
-  const discountPercentage =.1
-  const [cartItems, setCartItems] = useState('');
+  const discountPercentage = 0.1;
+  const [cartItems, setCartItems] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [itemEdit, setitemEdit] = useState({
     id: "",
@@ -21,22 +21,25 @@ function Cart() {
     setitemEdit({ id: id, status: true });
   };
   const handleClearCart = () => {
-    cart.clearCart().then(response=>{if (response.success) {
-      dispatch(clearCart())
-      setOpenModal(false)
-    }}).catch(error=>console.log(error))
-   
- }
+    cart
+      .clearCart()
+      .then((response) => {
+        if (response.success) {
+          dispatch(clearCart());
+          setOpenModal(false);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
   return data && data.items.length > 0 ? (
     <div className="mx-auto max-w-full px-2 lg:px-0 bg-white shadow-lg ">
       <Modals
         openModal={openModal}
         setOpenModal={setOpenModal}
         cb={handleClearCart}
-        headerText={`Clear Cart`}
         bodyText={`Are you sure want to clear your cart?`}
-        btn1={`Yes,I want`}
-        btn2={`No,Go Back`}
+        btn1={`Yes, I'm sure`}
+        btn2={` No, cancel`}
       />
       <div className="mx-auto max-w-2xl py-8 lg:max-w-7xl">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -79,8 +82,8 @@ function Cart() {
                             <p className="text-xs font-medium text-gray-500 line-through">
                               &#8377;
                               {(
-                                item.product.price / (1 - discountPercentage)
-                                
+                                item.product.price /
+                                (1 - discountPercentage)
                               ).toFixed(0)}
                             </p>
                             <p className="text-sm font-medium text-gray-900">
@@ -96,7 +99,7 @@ function Cart() {
                             <p className="text-sm font-medium text-green-500">
                               10%
                             </p>
-                             {/* //todo discount should be dynamic check later */}
+                            {/* //todo discount should be dynamic check later */}
                           </div>
                         </div>
                       </div>
@@ -113,13 +116,17 @@ function Cart() {
                           -
                         </button>
                       ) : (
-                          <button type="button" className="h-7 w-7" onClick={() => { 
+                        <button
+                          type="button"
+                          className="h-7 w-7"
+                          onClick={() => {
                             cart
-                            .addProduct(item.product._id,item.quantity-1) 
-                              .then((response) => response.data).then(data=>dispatch(addInCart({data})))
-                            .catch((error) => console.log(error));
-                         
-                          }}>
+                              .addProduct(item.product._id, item.quantity - 1)
+                              .then((response) => response.data)
+                              .then((data) => dispatch(addInCart({ data })))
+                              .catch((error) => console.log(error));
+                          }}
+                        >
                           -
                         </button>
                       )}
@@ -134,10 +141,11 @@ function Cart() {
                           setCartItems(e.target.value);
                           cart
                             .addProduct(item.product._id, e.target.value)
-                            .then((response) => response.data).then(data=>dispatch(addInCart({data})))
+                            .then((response) => response.data)
+                            .then((data) => dispatch(addInCart({ data })))
                             .catch((error) => console.log(error));
                         }}
-                        onClick={() => {                     
+                        onClick={() => {
                           handleClick(item.product._id);
                           setCartItems("");
                         }}
@@ -152,13 +160,17 @@ function Cart() {
                           +
                         </button>
                       ) : (
-                          <button type="button" className="h-7 w-7" onClick={() => {                     
+                        <button
+                          type="button"
+                          className="h-7 w-7"
+                          onClick={() => {
                             cart
-                            .addProduct(item.product._id,item.quantity+1) 
-                              .then((response) => response.data).then(data=>dispatch(addInCart({data})))
-                            .catch((error) => console.log(error));
-                           
-                          }}>
+                              .addProduct(item.product._id, item.quantity + 1)
+                              .then((response) => response.data)
+                              .then((data) => dispatch(addInCart({ data })))
+                              .catch((error) => console.log(error));
+                          }}
+                        >
                           +
                         </button>
                       )}
@@ -170,12 +182,13 @@ function Cart() {
                         onClick={() => {
                           cart
                             .removeProduct(item.product._id)
-                            .then(response=>response.data).then(data=>dispatch(addInCart({data})))
+                            .then((response) => response.data)
+                            .then((data) => dispatch(addInCart({ data })))
                             .catch((error) => console.log(error));
                           let id = item.product._id;
-                              let price = item.product.price;
-                              dispatch(removeCart({ id, price }));
-                          toastify.remove("Item has been removed")
+                          let price = item.product.price;
+                          dispatch(removeCart({ id, price }));
+                          toastify.remove("Item has been removed");
                         }}
                       >
                         <LuTrash2 size={12} className="text-red-500" />
@@ -188,17 +201,18 @@ function Cart() {
                 </div>
               ))}
             </ul>
-            <div className="flex mt-8 pl-3"> <button
-            type="button"
-              className="rounded-md  bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              onClick={() => {
-                // cart.clearCart().then().catch(error=>console.log(error))
-                // dispatch(clearCart())
-                setOpenModal(true)
-              }}
-          >
-         Clear cart
-          </button></div>
+            <div className="flex mt-8 pl-3">
+              {" "}
+              <button
+                type="button"
+                className="rounded-md  bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                onClick={() => {
+                  setOpenModal(true);
+                }}
+              >
+                Clear cart
+              </button>
+            </div>
           </section>
           {/* Order summary */}
           <section
@@ -224,10 +238,7 @@ function Cart() {
                     <span>Discount</span>
                   </dt>
                   <dd className="text-sm font-medium text-green-700">
-                    ₹
-                    {Math.floor(
-                      data.cartTotal * discountPercentage 
-                    )}
+                    ₹{Math.floor(data.cartTotal * discountPercentage)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between py-4">
@@ -241,30 +252,30 @@ function Cart() {
                     Total Amount
                   </dt>
                   <dd className="text-base font-medium text-gray-900">
-                    ₹
-                    {data.cartTotal}{" "}
+                    ₹{data.cartTotal}{" "}
                   </dd>
                 </div>
               </dl>
               <div className="px-2 pb-4 font-medium text-green-700">
                 {`You will save ₹ ${Math.floor(
-                  data.cartTotal *  discountPercentage 
+                  data.cartTotal * discountPercentage
                 )} on this order`}
               </div>
-              <div className="flex justify-between mt-7">  <button
-            type="button"
-                className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                onClick={() => navigate("/")}
-              
-          >
-            Continue Shopping
-              </button>
-              <button
-            type="button"
+              <div className="flex justify-between mt-7">
+                {" "}
+                <button
+                  type="button"
                   className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-                  onClick={() => navigate("/products/checkout")}   
-          >
-           Checkout
+                  onClick={() => navigate("/")}
+                >
+                  Continue Shopping
+                </button>
+                <button
+                  type="button"
+                  className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+                  onClick={() => navigate("/products/checkout")}
+                >
+                  Checkout
                 </button>
                 {/* /products/checkout */}
               </div>
@@ -273,7 +284,6 @@ function Cart() {
         </form>
       </div>
     </div>
-
   ) : (
     <div className="py-12 h-96">
       <div className="text-center">
@@ -295,11 +305,10 @@ function Cart() {
           </button>
           <button
             type="button"
-              className="rounded-md bg-black px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
-              onClick={() => navigate("/signin")}
-              
+            className="rounded-md bg-black px-5 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
+            onClick={() => navigate("/signin")}
           >
-           Sign In
+            Sign In
           </button>
         </div>
       </div>
