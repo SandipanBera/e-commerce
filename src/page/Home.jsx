@@ -6,7 +6,7 @@ import { addInCart } from "../createSlice/Cartslice";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetAllProductsQuery } from "../createSlice/Apislice";
 import { useState, useEffect } from "react";
-import { Button } from "flowbite-react";
+import Button from "../components/Button";
 import LoadingSkeleton from "../components/Loadingskeleton";
 function Home() {
   const [page, setPage] = useState(1);
@@ -82,7 +82,7 @@ function Home() {
               ))}
         </div>
         <div className="mt-5 flex justify-center">
-          <Button size="md" onClick={moreProduct}>
+          <Button  cb={moreProduct}>
             load more
           </Button>
         </div>

@@ -11,6 +11,7 @@ import { authService } from "../../feature";
 import { clearCart } from "../../createSlice/Cartslice";
 import Search from "../Search";
 import { logout } from "../../createSlice/Authslice";
+import FormModal from "../modal/FormModal";
 
 function Flownavbar() {
   const auth = useSelector((state) => state.auth);
@@ -101,13 +102,18 @@ function Flownavbar() {
               {cartItem}
             </div>
           </button>
-
+          <FormModal openModal={openModal} setOpenModal={setOpenModal} />
           <Dropdown
             arrowIcon={false}
             inline
             label={
               auth?.userData?.avatar ? (
-                <Avatar alt="User settings" img={ auth?.userData?.avatar?.url } rounded  className="w-10 h-10"/>
+                <Avatar
+                  alt="User settings"
+                  img={auth?.userData?.avatar?.url}
+                  rounded
+                  className="w-10 h-10"
+                />
               ) : (
                 <Avatar alt="User settings" rounded />
               )
@@ -138,7 +144,11 @@ function Flownavbar() {
               {" "}
               <Dropdown.Item>Profile</Dropdown.Item>
             </Link>
-            <Dropdown.Item>Change Password</Dropdown.Item>
+            {auth?.status && (
+              <Dropdown.Item onClick={() => setOpenModal(true)}>
+                Change Password
+              </Dropdown.Item>
+            )}
             <Dropdown.Divider />
             <Dropdown.Item
               onClick={() => {

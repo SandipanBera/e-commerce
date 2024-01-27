@@ -44,7 +44,7 @@ function CataegoryProduct() {
       </div>
 
       <div className="mt-5 flex justify-center">
-        <Button size="lg" disabled={hasNextPage} onClick={moreProduct}>
+        <Button  disabled={hasNextPage} cb={moreProduct}>
           load more
         </Button>
       </div>

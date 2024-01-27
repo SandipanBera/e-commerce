@@ -2,7 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { product } from "../feature/index";
-import { Button } from "flowbite-react";
+import Button from "../components/Button";
 import ProductCard from "../components/ProductCard";
 import Container from "../container/container";
 function Category() {
@@ -59,9 +59,9 @@ function Category() {
           </div>
         </Container>
         <div className="mt-5 flex justify-center">
-        { hasNextPage? <Button size="lg"  onClick={moreProduct}>
+        { hasNextPage? <Button   cb={moreProduct}>
             load more
-          </Button>:<Button size="lg" disabled onClick={moreProduct}>
+          </Button>:<Button className="disabled:bg-slate-500" disabled cb={moreProduct}>
             load more
           </Button>}
         </div>
