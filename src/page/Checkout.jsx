@@ -10,7 +10,6 @@ import { IoWarningOutline } from "react-icons/io5";
 import { addShipingAddress } from "../createSlice/Shiping_address_slice";
 export function Checkout() {
   const cartData = useSelector((state) => state.cart.data);
-  console.log(cartData);
   const auth = useSelector((state) => state.auth);
   const [couponCode, setCouponCode] = useState(
     cartData?.coupon?.couponCode || ""
@@ -30,7 +29,7 @@ export function Checkout() {
       addressLine1: "",
       addressLine2: "",
       city: "",
-      state: "",
+      state: "Select state",
       pincode: "",
     },
   });
@@ -52,7 +51,6 @@ export function Checkout() {
         .catch((error) => console.log(error));
     }
   }, [auth.status, reset]);
-
   useEffect(() => {
     if (auth.status) {
       address.getAddress().then((response) => {
@@ -60,7 +58,7 @@ export function Checkout() {
           addressLine1: response?.data?.addresses[0]?.addressLine1 || "",
           addressLine2: response?.data?.addresses[0]?.addressLine2 || "",
           city: response?.data?.addresses[0]?.city || "",
-          state: response?.data?.addresses[0]?.state || "",
+          state: response?.data?.addresses[0]?.state ,
           pincode: response?.data?.addresses[0]?.pincode || "",
         });
         console.log(response?.data?.addresses[0]?.state);
@@ -322,6 +320,7 @@ export function Checkout() {
                                 <select
                                   id="state"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                                // defaultValue={"Select state"}
                                   {...register("state", {
                                     required: "  This field is required",
                                   })}
