@@ -4,11 +4,20 @@ import options from "../option/option";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { cart, coupon, toastify, profile, address } from "../feature/index";
+import {
+  cart,
+  coupon,
+  toastify,
+  profile,
+  address,
+  order,
+} from "../feature/index";
 import { addInCart, removeCart } from "../createSlice/Cartslice";
 import { IoWarningOutline } from "react-icons/io5";
 import { addShipingAddress } from "../createSlice/Shiping_address_slice";
 export function Checkout() {
+  const [addresses, setAddresses] = useState([]);
+  const [addressesId, setAddressesId] = useState(null);
   const cartData = useSelector((state) => state.cart.data);
   const auth = useSelector((state) => state.auth);
   const [couponCode, setCouponCode] = useState(
@@ -29,7 +38,7 @@ export function Checkout() {
       addressLine1: "",
       addressLine2: "",
       city: "",
-      state: "Select state",
+      state: "",
       pincode: "",
     },
   });
@@ -39,37 +48,53 @@ export function Checkout() {
       profile
         .getProfile()
         .then((response) => {
-          if (response) {
-            reset({
-              name:
-                response?.data?.firstName + " " + response?.data?.lastName ||
-                "",
-              mobile: response?.data?.phoneNumber || "",
-            });
-          }
+          reset({
+            name:
+              response?.data?.firstName + " " + response?.data?.lastName || "",
+            mobile: response?.data?.phoneNumber || "",
+          });
         })
         .catch((error) => console.log(error));
     }
   }, [auth.status, reset]);
   useEffect(() => {
     if (auth.status) {
-      address.getAddress().then((response) => {
-        reset({
-          addressLine1: response?.data?.addresses[0]?.addressLine1 || "",
-          addressLine2: response?.data?.addresses[0]?.addressLine2 || "",
-          city: response?.data?.addresses[0]?.city || "",
-          state: response?.data?.addresses[0]?.state ,
-          pincode: response?.data?.addresses[0]?.pincode || "",
-        });
-        console.log(response?.data?.addresses[0]?.state);
-      });
+      address
+        .getAddress()
+        .then((response) => {
+          setAddresses([...response.data.addresses]);
+          setAddressesId(response?.data?.addresses[0]?._id);
+          console.log(response?.data?.addresses[0]?._id);
+       
+          reset({
+            addressLine1: response?.data?.addresses[0]?.addressLine1 || "",
+            addressLine2: response?.data?.addresses[0]?.addressLine2 || "",
+            city: response?.data?.addresses[0]?.city || "",
+            state: response?.data?.addresses[0]?.state || "",
+            pincode: response?.data?.addresses[0]?.pincode || "",
+          });
+        })
+        .catch((error) => console.log(error));
     }
   }, [auth.status, reset]);
+  const handleChange = (e) => {
+    setAddressesId(addresses[e.target.value]?._id);
+    reset({
+      addressLine1: addresses[e.target.value]?.addressLine1 || "",
+      addressLine2: addresses[e.target.value]?.addressLine2 || "",
+      city: addresses[e.target.value]?.city || "",
+      state: addresses[e.target.value]?.state || "",
+      pincode: addresses[e.target.value]?.pincode || "",
+    });
+  };
 
   const onSubmit = (data) => {
     dispatch(addShipingAddress(data));
-    navigate("/products/checkout/payment");
-    console.log(data);
+    order
+      .placeOrder(addressesId)
+      .then()
+      .catch((error) => console.log(error));
+
   };
   return (
     cartData && (
@@ -91,7 +116,7 @@ export function Checkout() {
                             Contact information
                           </h3>
 
-                          <div className="mt-4 w-full">
+                          <div className="mt-4 w-full flex flex-col gap-y-4">
                             <label
                               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               htmlFor="name"
@@ -107,6 +132,7 @@ export function Checkout() {
                                 required: "  This field is required",
                               })}
                             />
+
                             {errors.name && (
                               <p className="text-red-600 mt-2 inline-flex items-center">
                                 <IoWarningOutline />
@@ -136,97 +162,27 @@ export function Checkout() {
                             )}
                           </div>
                         </div>
-                        <hr className="my-8" />
-                        <div className="mt-10">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            Payment details
-                          </h3>
 
-                          <div className="mt-6 grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-4">
-                            <div className="col-span-3 sm:col-span-4">
-                              <label
-                                htmlFor="cardNum"
-                                className="block text-sm font-medium text-gray-700"
-                              >
-                                Card number
-                              </label>
-                              <div className="mt-1">
-                                <input
-                                  className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  type="text"
-                                  placeholder="4242 4242 4242 4242"
-                                  id="cardNum"
-                                  {...register("cardNum", {
-                                    required: "  This field is required",
-                                  })}
-                                />
-                                {errors.cardNum && (
-                                  <p className="text-red-600 mt-2 inline-flex items-center">
-                                    <IoWarningOutline />
-                                    This field is required
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                            <div className="col-span-2 sm:col-span-3">
-                              <label
-                                htmlFor="expiration-date"
-                                className="block text-sm font-medium text-gray-700"
-                              >
-                                Expiration date (MM/YY)
-                              </label>
-                              <div className="mt-1">
-                                <input
-                                  type="date"
-                                  name="expiration-date"
-                                  id="expiration-date"
-                                  autoComplete="cc-exp"
-                                  className="block h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("expirationDate", {
-                                    required: "  This field is required",
-                                  })}
-                                />
-                                {errors.expirationDate && (
-                                  <p className="text-red-600 mt-2 inline-flex items-center">
-                                    <IoWarningOutline />
-                                    This field is required
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-
-                            <div>
-                              <label
-                                htmlFor="cvc"
-                                className="block text-sm font-medium text-gray-700"
-                              >
-                                CVC
-                              </label>
-                              <div className="mt-1">
-                                <input
-                                  type="text"
-                                  name="cvc"
-                                  id="cvc"
-                                  autoComplete="csc"
-                                  className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                  {...register("cvc", {
-                                    required: "  This field is required",
-                                  })}
-                                />
-                                {errors.cvc && (
-                                  <p className="text-red-600 mt-2 inline-flex items-center">
-                                    *required
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
                         <hr className="my-8" />
                         <div className="mt-10">
                           <h3 className="text-lg font-semibold text-gray-900">
                             Shipping address
                           </h3>
+                          <select
+                            id="state"
+                            className="flex h-10 mt-3 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                            onChange={handleChange}
+                          >
+                            {addresses?.map((address, index) => (
+                              <option
+                                className="w-full"
+                                key={address._id}
+                                value={index}
+                              >
+                                {`address ${index + 1}`}
+                              </option>
+                            ))}
+                          </select>
 
                           <div className="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-3">
                             <div className="sm:col-span-3">
@@ -320,9 +276,8 @@ export function Checkout() {
                                 <select
                                   id="state"
                                   className="flex h-10 w-full rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                // defaultValue={"Select state"}
                                   {...register("state", {
-                                    required: "  This field is required",
+                                    required: "*required",
                                   })}
                                 >
                                   {options?.map((option) => (
@@ -337,8 +292,7 @@ export function Checkout() {
                                 </select>
                                 {errors.state && (
                                   <p className="text-red-600 mt-2 inline-flex items-center">
-                                    <IoWarningOutline />
-                                    This field is required
+                                    {errors.state.message}
                                   </p>
                                 )}
                               </div>
