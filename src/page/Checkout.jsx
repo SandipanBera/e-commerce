@@ -64,8 +64,6 @@ export function Checkout() {
         .then((response) => {
           setAddresses([...response.data.addresses]);
           setAddressesId(response?.data?.addresses[0]?._id);
-          console.log(response?.data?.addresses[0]?._id);
-       
           reset({
             addressLine1: response?.data?.addresses[0]?.addressLine1 || "",
             addressLine2: response?.data?.addresses[0]?.addressLine2 || "",
@@ -90,11 +88,11 @@ export function Checkout() {
 
   const onSubmit = (data) => {
     dispatch(addShipingAddress(data));
+    console.log(data);
     order
       .placeOrder(addressesId)
-      .then()
+      .then((response) => console.log(response))
       .catch((error) => console.log(error));
-
   };
   return (
     cartData && (
@@ -106,7 +104,7 @@ export function Checkout() {
               <div className="flow-root">
                 <div className="-my-6 divide-y divide-gray-200">
                   <div className="py-6">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                  <form onSubmit={handleSubmit(onSubmit)}>
                       <div className="mx-auto max-w-2xl px-4 lg:max-w-none lg:px-0">
                         <div>
                           <h3
@@ -361,6 +359,7 @@ export function Checkout() {
                         </div>
                       </div>
                     </form>
+          
                   </div>
                 </div>
               </div>
