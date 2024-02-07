@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { TfiClose } from "react-icons/tfi";
 import options from "../option/option";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import {  Link,useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
   cart,
@@ -20,12 +20,13 @@ export function Checkout() {
   const [addressesId, setAddressesId] = useState(null);
   const cartData = useSelector((state) => state.cart.data);
   const auth = useSelector((state) => state.auth);
+const navigate=useNavigate()
   const [couponCode, setCouponCode] = useState(
     cartData?.coupon?.couponCode || ""
   );
   const [message, setMessage] = useState(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -86,12 +87,51 @@ export function Checkout() {
     });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = (data,e) => {
     dispatch(addShipingAddress(data));
-    console.log(data);
     order
       .placeOrder(addressesId)
-      .then((response) => console.log(response))
+      .then((response) => {
+        console.log(response)
+        const options = {
+          "key": "rzp_test_657ZishMCl6LQp", // Enter the Key ID generated from the Dashboard
+          "amount": response.data.ammount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          "currency": "INR",
+          "name": "Acme Corp",
+          "description": "Test Transaction",
+          "image": "http://localhost:5173/shopping_cart_full.png",
+          "order_id": response.data.id,
+          "handler": function (response){
+              alert(response.razorpay_payment_id);
+              alert(response.razorpay_order_id);
+            alert(response.razorpay_signature)
+            navigate("/products/payment/order_summary")
+          },
+          "prefill": {
+              "name": "sandipan bera",
+              "email": "gaurav.kumar@example.com",
+              "contact": "8116744279"
+          },
+          "notes": {
+              "address": "Razorpay Corporate Office"
+          },
+          "theme": {
+              "color": "#3399cc"
+          }
+      };
+        const rzp1 = new window.Razorpay(options);
+        rzp1.on('payment.failed', function (response){
+          alert(response.error.code);
+          alert(response.error.description);
+          alert(response.error.source);
+          alert(response.error.step);
+          alert(response.error.reason);
+          alert(response.error.metadata.order_id);
+          alert(response.error.metadata.payment_id);
+  });
+        rzp1.open();
+        e.preventDefault();
+      })
       .catch((error) => console.log(error));
   };
   return (

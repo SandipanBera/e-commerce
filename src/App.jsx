@@ -2,12 +2,13 @@ import { default as Headers } from "./components/header/Navbar";
 import { default as Footers } from "./components/footer/footer";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { cart, address, authService } from "./feature";
+import { cart, address, authService, profile } from "./feature";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { addInCart } from "./createSlice/Cartslice";
 import { setAddresses } from "./createSlice/Addressslice";
 import { login } from "./createSlice/Authslice";
+import { setUserProfile } from "./createSlice/Profileslice";
 
 
 function App() {
@@ -35,6 +36,12 @@ function App() {
         .catch((error) => console.log(error));
     }
   }, [dispatch, auth.status]);
+  useEffect(() => {
+   if (auth.status) {
+    profile.getProfile().then(response=>dispatch(setUserProfile(response.data))).catch(error=>console.log(error))
+   }
+  }, [dispatch, auth.status])
+  
   // Fetching the address data when the app loads for the first time.
   useEffect(() => {
     if (auth.status) {
