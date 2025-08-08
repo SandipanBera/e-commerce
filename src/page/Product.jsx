@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect, useRef,useMemo } from "react";
 import { Button } from "flowbite-react";
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {cart} from "../feature/index";
 import { addInCart } from "../createSlice/Cartslice";
 import { HiShoppingCart } from "react-icons/hi";

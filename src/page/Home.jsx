@@ -17,23 +17,7 @@ function Home() {
   const moreProduct = () => {
     setPage(page + 1);
   };
-  // useEffect(() => {
-  //   if (query) {
-  //     setProducts([])
-  //     product
-  //       .getAllProduct(page, totalProducts)
-  //       .then((response) => setProducts(response.data.products))
-  //       .catch((error) => console.log(error));
-  //   } else {
-  //     product
-  //       .getAllProduct(page)
-  //       .then((response) => {
-  //         setProducts((prev) => [...prev, ...response.data.products]);
-  //         setTotalProducts(response.data.totalProducts);
-  //       })
-  //       .catch((error) => console.log(error));
-  //   }
-  // }, [page, query, totalProducts]);
+
 
   const { data: response, isLoading, isSuccess } = useGetAllProductsQuery(page);
   const products = response?.data?.products ?? [];

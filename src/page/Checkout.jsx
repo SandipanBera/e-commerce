@@ -92,7 +92,6 @@ const navigate=useNavigate()
     order
       .placeOrder(addressesId)
       .then((response) => {
-        console.log(response)
         const options = {
           "key": "rzp_test_657ZishMCl6LQp", // Enter the Key ID generated from the Dashboard
           "amount": response.data.ammount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -109,8 +108,8 @@ const navigate=useNavigate()
           },
           "prefill": {
               "name": "sandipan bera",
-              "email": "gaurav.kumar@example.com",
-              "contact": "8116744279"
+              "email": "example123@example.com",
+              "contact": "xxxxxxxxxx"
           },
           "notes": {
               "address": "Razorpay Corporate Office"

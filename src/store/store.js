@@ -17,8 +17,7 @@ export const store = configureStore({
         profile:Profileslice,
         [api.reducerPath]: api.reducer
     },
-     // Adding the api middleware enables caching, invalidation, polling,
-  // and other useful features of `rtk-query`.
+     // Adding the api middleware enables caching, invalidation, polling of `rtk-query`.
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),
 })
